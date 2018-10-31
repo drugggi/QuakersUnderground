@@ -9,6 +9,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
@@ -17,9 +18,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public static final int HEIGHT = 480;
     public static final int MOVESPEED = 0;
 
+
     private MainThread thread;
     private Background bg;
     private Player player;
+
+    private ArrayList<Movepuff> puffs;
+    private long puffStartTime;
 
     public GamePanel(Context context) {
         super(context);
@@ -39,6 +44,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
          bg = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.soilbg) );
          player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.firstburlybug),40,40,4);
         // bg.setVector(-5,-5);
+        puffs = new ArrayList<Movepuff>();
+
+        puffStartTime = System.nanoTime();
 
         //we can safely start the game loop
         thread.setRunning(true);
@@ -54,7 +62,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         boolean retry = true;
-        while (retry) {
+        int counter = 0;
+        while (retry && counter < 1000) {
+            counter++;
             try {
                 thread.setRunning(false);
                 thread.join();
@@ -128,6 +138,21 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         if (player.isPlaying() ) {
             bg.update();
             player.update();
+
+            long elapsed = (System.nanoTime() - puffStartTime)/1000000;
+            if (elapsed > 120) {
+                Log.d("add puff","yes");
+                 puffs.add(new Movepuff(player.getX(),player.getY()) );
+                puffStartTime = System.nanoTime();
+            }
+            for (int i = 0; i < puffs.size() ; i++) {
+                puffs.get(i).update();
+
+            }
+            if (puffs.size() > 10) {
+                puffs.clear();
+            }
+
         }
     }
 
@@ -143,6 +168,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
             bg.draw(canvas);
             player.draw(canvas);
+
+            for (Movepuff mp: puffs) {
+                mp.draw(canvas);
+            }
 
             canvas.restoreToCount(savedState);
         }

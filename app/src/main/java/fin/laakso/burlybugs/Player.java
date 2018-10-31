@@ -45,8 +45,8 @@ public class Player extends GameObject {
         int directionX = (int ) rawX ;
         int directionY = (int) rawY;
 
-        int differenceX = (directionX - x)/50;
-        int differenceY = (directionY - y)/50;
+        int differenceX = (directionX - x);
+        int differenceY = (directionY - y);
 
         dx = differenceX;
         dy = differenceY;
@@ -83,12 +83,35 @@ public class Player extends GameObject {
         }
         animation.update();
 
-        if (up) {
-            x += dx;
-            y += dy;
+        if (y > 0 && y < GamePanel.HEIGHT - 25 && x > 0 && x < GamePanel.WIDTH) {
+            if (up) {
+                x += dx / 50;
+                y += dy / 50;
 
+            } else {
+                x += dx / 50;
+                y += dy / 50;
+
+                dx = dx / 2;
+                dy = dy / 2;
+
+            }
         }
+        else {
 
+
+/*
+
+            dy = 0;
+            dx = 0;
+            up = false;
+*/
+
+ /*           if (y < 0) { y += 5; dy = 0; }
+            else {y -= 5; dy = 0; }
+            if (x < 0) { x += 5; dx = 0;}
+            else {x -= 5; dx = 0;}*/
+        }
 /*
 
         if (y > 0 && y < GamePanel.HEIGHT - 25) {
