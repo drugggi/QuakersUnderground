@@ -25,6 +25,14 @@ public abstract class GameObject {
         return y;
     }
 
+    public int getDX() {
+        return dx;
+    }
+
+    public int getDY() {
+        return dy;
+    }
+
     public int getHeight() {
         return height;
 

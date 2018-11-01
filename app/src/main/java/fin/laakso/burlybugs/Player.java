@@ -8,16 +8,17 @@ import android.util.Log;
 public class Player extends GameObject {
     private Bitmap spritesheet;
     private int score;
-    private double dya;
-    private boolean up;
+    // private double dya;
+    private boolean moving;
     private boolean playing;
+    private boolean jumping;
     private Animation animation = new Animation();
     private long startTime;
 
     public Player(Bitmap res, int w, int h, int numFrames) {
         super.x = 100;
         super.y = GamePanel.HEIGHT/2;
-        super.dy = 0;
+        // super.dy = 0;
         super.height = h;
         super.width = w;
 
@@ -37,23 +38,34 @@ public class Player extends GameObject {
 
     }
 
-    public void setUp(boolean b) {
-        this.up = b;
+    public void setMoving(boolean b) {
+        this.moving = b;
+        //dx = 0;
     }
 
     public void setDirection(float rawX,float rawY) {
+
+
+
         int directionX = (int ) rawX ;
         int directionY = (int) rawY;
+        // Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
+        int differenceX = - (x - directionX);
+        int differenceY = - (y - directionY);
 
-        int differenceX = (directionX - x);
-        int differenceY = (directionY - y);
+        // dy = differenceY;
 
-        dx = differenceX;
-        dy = differenceY;
+        // Log.d("Diffs",""+differenceX + "/" + differenceY);
 
+        if (!moving && !jumping) {
+            dx = differenceX / 10;
+            moving = true;
+        }
+        if (!jumping && differenceY < -20) {
+            jumping = true;
+            dy = differenceY / 10;
+        }
         Log.d("Diffs",""+differenceX + "/" + differenceY);
-
-
 /*
         if (x < directionX) {
             dx = differenceX;
@@ -83,8 +95,44 @@ public class Player extends GameObject {
         }
         animation.update();
 
+        //Log.d("PLAYER UPDATE","jump: " + jumping + "   x/y: "+x+"/"+y+"  dx/dy: " +dx + "/" + dy);
+
+        if (!moving) {
+            // consider dx = dx *  3 /4
+            dx = dx / 2;
+        }
+
+        if (jumping) {
+            dy = dy - GamePanel.GRAVITY;
+        }
+        else {
+            dy = 0;
+            jumping = false;
+        }
+       // y = y + GamePanel.GRAVITY;
+
+        x += dx ;
+        if (y > 0 && y <= GamePanel.HEIGHT - 40 && x > 0 && x < GamePanel.WIDTH) {
+                y += dy ;
+
+        }
+
+        if (y >= GamePanel.HEIGHT - 40) {
+            y = GamePanel.HEIGHT - 40;
+            dy = 0;
+
+            jumping = false;
+        }
+        if (dx == 0) {
+            moving = false;
+        }
+
+
+
+/*
+
         if (y > 0 && y < GamePanel.HEIGHT - 25 && x > 0 && x < GamePanel.WIDTH) {
-            if (up) {
+            if (moving) {
                 x += dx / 50;
                 y += dy / 50;
 
@@ -97,7 +145,8 @@ public class Player extends GameObject {
 
             }
         }
-        else {
+
+*/
 
 
 /*
@@ -111,7 +160,7 @@ public class Player extends GameObject {
             else {y -= 5; dy = 0; }
             if (x < 0) { x += 5; dx = 0;}
             else {x -= 5; dx = 0;}*/
-        }
+
 /*
 
         if (y > 0 && y < GamePanel.HEIGHT - 25) {
@@ -139,7 +188,7 @@ public class Player extends GameObject {
     }
 
     public void draw(Canvas canvas) {
-        Log.d("player DRAW","x/y: " + x +"/"+y);
+       // Log.d("player DRAW","x/y: " + x +"/"+y);
         canvas.drawBitmap(animation.getImage() , x , y ,null);
     }
 
@@ -155,8 +204,20 @@ public class Player extends GameObject {
         playing = b;
     }
 
+    public boolean isMoving() {
+        return moving;
+    }
+
+    public boolean isJumping() {
+        return jumping;
+    }
+
+    public void setJumping(boolean j) {
+        jumping = j;
+    }
+
     public void resetDYA() {
-        dya = 0;
+        // dya = 0;
     }
     public void resetScore() {
         score = 0;

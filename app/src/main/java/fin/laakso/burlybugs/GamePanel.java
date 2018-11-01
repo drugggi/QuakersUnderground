@@ -15,9 +15,11 @@ import java.util.Random;
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     public static final int WIDTH = 856;
+    //public  final float SCALEFACTOR_WIDTH = WIDTH/getWidth();
     public static final int HEIGHT = 480;
+    // public final float SCALEFACTOR_HEIGHT = HEIGHT/getHeight();
     public static final int MOVESPEED = 0;
-
+    public static final int GRAVITY = -1;
 
     private MainThread thread;
     private Background bg;
@@ -25,6 +27,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     private ArrayList<Movepuff> puffs;
     private long puffStartTime;
+
+    // private ArrayList<Shotgun> ShotgunShots;
 
     public GamePanel(Context context) {
         super(context);
@@ -51,6 +55,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         //we can safely start the game loop
         thread.setRunning(true);
         thread.start();
+        player.setPlaying(true);
+        player.setJumping(true);
 
     }
 
@@ -87,6 +93,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
          bg.setVector(newDX,newDY);*/
 
+/*
 
         int eventNumber = event.getAction();
         long downTime = event.getDownTime();
@@ -102,23 +109,36 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         Log.d("Event","onTouchEvent Method");
 
+*/
+
+        Log.d("HEIGHT/WIDTH", getHeight()+"/" + getWidth());
+        float rawX = event.getRawX() *  WIDTH / getWidth();
+        float rawY = event.getRawY() * HEIGHT / getHeight();
 
         switch (event.getAction() ) {
             case MotionEvent.ACTION_DOWN:
+
+                if (player.isJumping() ) {
+
+                } else {
+                    player.setDirection(rawX,rawY);
+                }
                 // Log.d("action","down");
+/*
 
                 if(player.isPlaying() ) {
-                    player.setUp(true);
+                    //player.setMoving(true);
                     player.setDirection(rawX,rawY);
                 }
                 else  {
                     player.setPlaying(true);
                 }
+*/
 
                 return true;
 
             case MotionEvent.ACTION_UP:
-                player.setUp(false);
+                player.setMoving(false);
 
                 //Log.d("action","up");
                 return true;
@@ -140,16 +160,30 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             player.update();
 
             long elapsed = (System.nanoTime() - puffStartTime)/1000000;
-            if (elapsed > 120) {
-                Log.d("add puff","yes");
-                 puffs.add(new Movepuff(player.getX(),player.getY()) );
-                puffStartTime = System.nanoTime();
+            if (elapsed > 120  ) {
+
+                if (player.isMoving() && !player.isJumping()) {
+                    //Log.d("add puff","yes");
+                    puffs.add(new Movepuff(player.getX(), player.getY() + 40, 5, player.getDX(), player.getDY()));
+                    puffStartTime = System.nanoTime();
+                }
+                else {
+                    if (puffs.size() != 0 ) {
+                        puffs.remove(0);
+                    }
+                }
             }
             for (int i = 0; i < puffs.size() ; i++) {
                 puffs.get(i).update();
 
+                int tempX = puffs.get(i).getX();
+                int tempY = puffs.get(i).getY();
+                if (tempX < 0 || tempX > GamePanel.WIDTH || tempY < 0 || tempY > GamePanel.HEIGHT) {
+                    puffs.remove(i);
+                }
+
             }
-            if (puffs.size() > 10) {
+            if (puffs.size() > 30) {
                 puffs.clear();
             }
 
