@@ -5,6 +5,13 @@ import android.graphics.Canvas;
 import android.os.SystemClock;
 import android.util.Log;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.atan;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.tan;
+import static java.lang.Math.tanh;
+
 public class Player extends GameObject {
     private Bitmap spritesheet;
     private int score;
@@ -85,6 +92,57 @@ public class Player extends GameObject {
             // y--;
         }*/
 
+    }
+
+    public Shotgun addShot(float rawX, float rawY) {
+
+
+        int directionX = (int ) rawX ;
+        int directionY = (int) rawY;
+        // Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
+        float differenceX =  (x - directionX);
+        float differenceY = (y - directionY);
+
+        Log.d("Diffs",""+differenceX+"/"+differenceY);
+        double angle = Math.toDegrees(atan(differenceY/differenceX));
+
+       // Log.d("angle","deeg "+angle);
+
+        angle = Math.toRadians(angle);
+
+       // Log.d("angle","rad "+angle);
+
+        int velX = (int) (50 * cos(angle)) + dx;
+        int velY = (int) (50 * sin(angle)) + dy;
+        Log.d("velocity","velX/velY.  "+velX + "/" + velY);
+
+        if (differenceX < 0) {
+            velX = -1*velX;
+            velY = -1*velY;
+        }
+
+
+/*
+
+        if (differenceX > 0) {
+            velX = 50;
+        }
+        else {
+            velX = -50;
+        }
+
+        if (differenceY > 0) {
+            velY = 50;
+        }
+        else {
+            velY = -50;
+        }
+*/
+
+        Shotgun newShot = new Shotgun(x,y,4,velX,velY);
+
+
+        return newShot;
     }
 
     public void update() {

@@ -28,7 +28,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private ArrayList<Movepuff> puffs;
     private long puffStartTime;
 
-    // private ArrayList<Shotgun> ShotgunShots;
+    private ArrayList<Shotgun> shotgunShots;
 
     public GamePanel(Context context) {
         super(context);
@@ -49,6 +49,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
          player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.firstburlybug),40,40,4);
         // bg.setVector(-5,-5);
         puffs = new ArrayList<Movepuff>();
+        shotgunShots = new ArrayList<Shotgun>();
 
         puffStartTime = System.nanoTime();
 
@@ -119,6 +120,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             case MotionEvent.ACTION_DOWN:
 
                 if (player.isJumping() ) {
+                    shotgunShots.add(player.addShot(rawX,rawY) );
+                    Random rng = new Random();
+
+                    float rngFloatX = (float)rng.nextInt(20)-10;
+                    float rngFloatY = (float)rng.nextInt(20)-10;
+                    shotgunShots.add(player.addShot(rawX+rngFloatX,rawY+rngFloatY) );
+
+                    rngFloatX = (float)rng.nextInt(20)-10;
+                    rngFloatY = (float)rng.nextInt(20)-10;
+                    shotgunShots.add(player.addShot(rawX+rngFloatX,rawY+rngFloatY) );
+
 
                 } else {
                     player.setDirection(rawX,rawY);
@@ -159,6 +171,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             bg.update();
             player.update();
 
+
             long elapsed = (System.nanoTime() - puffStartTime)/1000000;
             if (elapsed > 120  ) {
 
@@ -183,6 +196,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 }
 
             }
+            for (int i = 0; i< shotgunShots.size() ; i++) {
+                int tempX = shotgunShots.get(i).getX();
+                int tempY = shotgunShots.get(i).getY();
+                if (tempX < 0 || tempX > GamePanel.WIDTH || tempY < 0 || tempY > GamePanel.HEIGHT) {
+                    shotgunShots.remove(i);
+                }
+            }
+            for (Shotgun shot: shotgunShots) {
+                shot.update();
+            }
+
             if (puffs.size() > 30) {
                 puffs.clear();
             }
@@ -205,6 +229,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
             for (Movepuff mp: puffs) {
                 mp.draw(canvas);
+            }
+            for (Shotgun shot: shotgunShots) {
+                shot.draw(canvas);
             }
 
             canvas.restoreToCount(savedState);
