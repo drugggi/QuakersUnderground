@@ -175,12 +175,27 @@ public class Player extends GameObject {
 
         }
 
+        if (x < 0) {
+            x = 1;
+            dx = 0;
+            moving = false;
+        }
+        if (y < 0) {
+            y = 1;
+            dy = 0;
+        }
+        if ( x > GamePanel.WIDTH ) {
+            x = GamePanel.WIDTH -1;
+            dx = 0;
+            moving = false;
+        }
         if (y >= GamePanel.HEIGHT - 40) {
             y = GamePanel.HEIGHT - 40;
             dy = 0;
 
             jumping = false;
         }
+
         if (dx == 0) {
             moving = false;
         }
