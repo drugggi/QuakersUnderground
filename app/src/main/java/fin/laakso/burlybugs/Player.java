@@ -24,6 +24,7 @@ public class Player extends GameObject {
     private long startTime;
     private boolean parachute;
 
+
     public Player(Bitmap res, int w, int h, int numFrames) {
         super.x = 100;
         super.y = GamePanel.HEIGHT/2;
@@ -131,8 +132,11 @@ public class Player extends GameObject {
             velY = -1*velY;
         }
          angle = Math.toDegrees(angle);
+        if (differenceX < 0) {
+            angle += 180;
+        }
         Missile newMissile = new Missile(missileBM,x,y,45,15,1,13,(float)angle);
-        newMissile.setVelocity(-velX/10,-velY/10);
+        newMissile.setVelocity(-velX/2,-velY/2);
 
         return newMissile;
 /*

@@ -28,6 +28,9 @@ public class MainThread extends Thread {
         int frameCount = 0;
         long targetTime = 1000/FPS;
 
+        long totalWaitTime = 0; // STATS
+        int seconds_passed = 0; // STATS
+
         while(running) {
             startTime = System.nanoTime();
             canvas = null;
@@ -59,6 +62,7 @@ public class MainThread extends Thread {
             waitTime = targetTime - timeMillis;
 
             try {
+                totalWaitTime += waitTime;
                 this.sleep(waitTime);
             } catch (Exception e) {
 
@@ -69,7 +73,12 @@ public class MainThread extends Thread {
                 averageFPS = 1000/((totalTime/frameCount)/1000000L);
                 frameCount = 0;
                 totalTime = 0;
-                // Log.d("avg FPS",""+averageFPS);
+
+                // PRINTING SOME STATS
+                seconds_passed++;
+                if (seconds_passed %10 == 0) {
+                    Log.d("GAMELOOPSTATS", seconds_passed + "s  avgFPS: " + averageFPS + "  avg waittime/s: " + totalWaitTime/seconds_passed + "ms");
+                }
             }
 
         }

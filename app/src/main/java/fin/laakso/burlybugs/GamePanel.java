@@ -16,9 +16,9 @@ import java.util.Random;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
-    public static final int WIDTH = 856;
+    public static final int WIDTH = 1280;
     //public  final float SCALEFACTOR_WIDTH = WIDTH/getWidth();
-    public static final int HEIGHT = 480;
+    public static final int HEIGHT = 720;
     // public final float SCALEFACTOR_HEIGHT = HEIGHT/getHeight();
     public static final int MOVESPEED = 0;
     public static final int GRAVITY = -1;
@@ -34,6 +34,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     private ArrayList<Missile> missiles;
     private long missileStartTime;
+
+    private SpriteSheet testSheet;
 
     Random rng;
 
@@ -52,13 +54,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
 
-         bg = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.soilbg) );
+         bg = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.dry_soil) );
          player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.firstburlybug),40,40,4);
-        // bg.setVector(-5,-5);
+        testSheet = new SpriteSheet(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest));
+          bg.setVector(0,-1);
         puffs = new ArrayList<Movepuff>();
         shotgunShots = new ArrayList<Shotgun>();
         missiles = new ArrayList<Missile>();
 
+        //Assets gameAssets = new Assets(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest))
+        Assets.init(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest));
         puffStartTime = System.nanoTime();
         missileStartTime = System.nanoTime();
 
@@ -315,6 +320,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
             bg.draw(canvas);
             player.draw(canvas);
+
+            Bitmap testCrop = testSheet.crop(64,64,32,32);
+            canvas.drawBitmap(Assets.grass,100,100,null);
+
+            //canvas.drawBitmap(testSheet.getSpritesheet(),10,10,null);
 
             for (Movepuff mp: puffs) {
                 mp.draw(canvas);
