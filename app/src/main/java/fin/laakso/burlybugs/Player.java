@@ -1,6 +1,7 @@
 package fin.laakso.burlybugs;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.SystemClock;
 import android.util.Log;
@@ -21,6 +22,7 @@ public class Player extends GameObject {
     private boolean jumping;
     private Animation animation = new Animation();
     private long startTime;
+    private boolean parachute;
 
     public Player(Bitmap res, int w, int h, int numFrames) {
         super.x = 100;
@@ -37,6 +39,7 @@ public class Player extends GameObject {
         for (int i = 0; i< image.length; i++) {
             image[i] = Bitmap.createBitmap(spritesheet,i*width,0,width,height);
 
+            // image[i] = Animation.rotateImage(image[i],45);
         }
 
         animation.setFrames(image);
@@ -53,10 +56,10 @@ public class Player extends GameObject {
     public void setDirection(float rawX,float rawY) {
 
 
-
+        Log.d("parachute",""+parachute);
         int directionX = (int ) rawX ;
         int directionY = (int) rawY;
-        // Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
+         Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
         int differenceX = - (x - directionX);
         int differenceY = - (y - directionY);
 
@@ -72,7 +75,7 @@ public class Player extends GameObject {
             jumping = true;
             dy = differenceY / 10;
         }
-        Log.d("Diffs",""+differenceX + "/" + differenceY);
+       //  Log.d("Diffs",""+differenceX + "/" + differenceY);
 /*
         if (x < directionX) {
             dx = differenceX;
@@ -92,6 +95,50 @@ public class Player extends GameObject {
             // y--;
         }*/
 
+    }
+
+    public void setParachute(boolean p) {
+        parachute = p;
+    }
+    public boolean isParachute() {
+        return parachute;
+    }
+
+    public Missile addMissile(float rawX,float rawY,Bitmap missileBM) {
+
+
+        int directionX = (int ) rawX ;
+        int directionY = (int) rawY;
+        // Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
+        float differenceX =  (x - directionX);
+        float differenceY = (y - directionY);
+
+        Log.d("Diffs",""+differenceX+"/"+differenceY);
+        double angle = atan(differenceY/differenceX);
+
+        // Log.d("angle","deeg "+angle);
+
+
+
+        // Log.d("angle","rad "+angle);
+
+        int velX = (int) (50 * cos(angle));
+        int velY = (int) (50 * sin(angle));
+        Log.d("velocity","velX/velY.  "+velX + "/" + velY);
+
+        if (differenceX < 0) {
+            velX = -1*velX;
+            velY = -1*velY;
+        }
+         angle = Math.toDegrees(angle);
+        Missile newMissile = new Missile(missileBM,x,y,45,15,1,13,(float)angle);
+        newMissile.setVelocity(-velX/10,-velY/10);
+
+        return newMissile;
+/*
+        missiles.add(new Missile(BitmapFactory.decodeResource(
+                getResources(),R.drawable.missile), WIDTH + 10, HEIGHT/2,45,15,player.getScore(),13));
+        */
     }
 
     public Shotgun addShot(float rawX, float rawY) {
@@ -156,16 +203,22 @@ public class Player extends GameObject {
         //Log.d("PLAYER UPDATE","jump: " + jumping + "   x/y: "+x+"/"+y+"  dx/dy: " +dx + "/" + dy);
 
         if (!moving) {
-            // consider dx = dx *  3 /4
-            dx = dx / 2;
+             dx = dx *  11 / 12;
+            // dx = dx / 2;
         }
 
         if (jumping) {
-            dy = dy - GamePanel.GRAVITY;
+            if (parachute) {
+                dy = 1;
+            }
+            else {
+                dy = dy - GamePanel.GRAVITY;
+            }
         }
         else {
             dy = 0;
             jumping = false;
+            parachute = false;
         }
        // y = y + GamePanel.GRAVITY;
 
@@ -184,8 +237,8 @@ public class Player extends GameObject {
             y = 1;
             dy = 0;
         }
-        if ( x > GamePanel.WIDTH ) {
-            x = GamePanel.WIDTH -1;
+        if ( x > GamePanel.WIDTH -40 ) {
+            x = GamePanel.WIDTH -40 - 1;
             dx = 0;
             moving = false;
         }

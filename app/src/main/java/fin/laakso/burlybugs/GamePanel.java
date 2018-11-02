@@ -1,8 +1,10 @@
 package fin.laakso.burlybugs;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -30,6 +32,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     private ArrayList<Shotgun> shotgunShots;
 
+    private ArrayList<Missile> missiles;
+    private long missileStartTime;
+
+    Random rng;
+
     public GamePanel(Context context) {
         super(context);
 
@@ -50,14 +57,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         // bg.setVector(-5,-5);
         puffs = new ArrayList<Movepuff>();
         shotgunShots = new ArrayList<Shotgun>();
+        missiles = new ArrayList<Missile>();
 
         puffStartTime = System.nanoTime();
+        missileStartTime = System.nanoTime();
 
         //we can safely start the game loop
         thread.setRunning(true);
         thread.start();
         player.setPlaying(true);
         player.setJumping(true);
+
+        rng = new Random();
 
     }
 
@@ -112,7 +123,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
 */
 
-        Log.d("HEIGHT/WIDTH", getHeight()+"/" + getWidth());
+       //  Log.d("HEIGHT/WIDTH", getHeight()+"/" + getWidth());
         float rawX = event.getRawX() *  WIDTH / getWidth();
         float rawY = event.getRawY() * HEIGHT / getHeight();
 
@@ -120,8 +131,23 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             case MotionEvent.ACTION_DOWN:
 
                 if (player.isJumping() ) {
+
+                    if (rawX < 100 && rawY > GamePanel.HEIGHT-100 ) {
+                        if (player.isParachute() ) {
+                            player.setParachute(false);
+                        }
+                        else {
+                            player.setParachute(true);
+                        }
+                        return true;
+                    }
+
+                    Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
+
+                    missiles.add(player.addMissile(rawX,rawY,missileBM)) ;
+/*
+
                     shotgunShots.add(player.addShot(rawX,rawY) );
-                    Random rng = new Random();
 
                     float rngFloatX = (float)rng.nextInt(20)-10;
                     float rngFloatY = (float)rng.nextInt(20)-10;
@@ -131,6 +157,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     rngFloatY = (float)rng.nextInt(20)-10;
                     shotgunShots.add(player.addShot(rawX+rngFloatX,rawY+rngFloatY) );
 
+*/
 
                 } else {
                     player.setDirection(rawX,rawY);
@@ -150,7 +177,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 return true;
 
             case MotionEvent.ACTION_UP:
-                player.setMoving(false);
+//                player.setMoving(false);
+
+                if (player.isPlaying() ) {
+                    player.setMoving(false);
+                }
+                else {
+                    Log.e("ARRAY SIZES","mis: " + missiles.size() + "  puff: " + puffs.size() + " sg: " + shotgunShots.size() );
+                    player.setPlaying(true);
+                }
 
                 //Log.d("action","up");
                 return true;
@@ -170,8 +205,61 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         if (player.isPlaying() ) {
             bg.update();
             player.update();
+            //add missiles on timer
+  /*
+    long missileElapsed = (System.nanoTime() - missileStartTime)/1000000;
+            if (missileElapsed > (2000-player.getScore()/4)) {
+
+                //first missile always goes down the middle
+                if (missiles.size() == 0) {
+                    missiles.add(new Missile(BitmapFactory.decodeResource(
+                            getResources(),R.drawable.missile), WIDTH + 10, HEIGHT/2,45,15,player.getScore(),13));
+                }
+                else {
+                    missiles.add(new Missile(BitmapFactory.decodeResource(
+                            getResources(),R.drawable.missile), WIDTH + 10,
+                            rng.nextInt(HEIGHT),45,15,player.getScore(),13));
+                }
+
+                missileStartTime = System.nanoTime();
+            }
+
+            for (int i = 0; i < missiles.size() ; i++) {
+
+                missiles.get(i).update();
+
+                if (collision(missiles.get(i),player)) {
+                    missiles.remove(i);
+                    player.setPlaying(false);
+                    break;
+                }
+
+                if (missiles.get(i).getX() <- 100) {
+                    missiles.remove(i);
+                    continue;
+                }
+
+                for (Shotgun sg: shotgunShots) {
+                    if (collision(sg,missiles.get(i))) {
+                        missiles.remove(i);
+                        break;
+                    }
+                }
 
 
+
+            }
+
+*/
+            for (int i = 0 ; i < missiles.size() ; i++) {
+                missiles.get(i).update();
+                if (missiles.get(i).getX() < -WIDTH || missiles.get(i).getX() > 2*WIDTH ||
+                        missiles.get(i).getY() < -HEIGHT || missiles.get(i).getY() > 2*HEIGHT) {
+                    missiles.remove(i);
+                }
+            }
+
+            // add smoke puffs if moving and timer
             long elapsed = (System.nanoTime() - puffStartTime)/1000000;
             if (elapsed > 120  ) {
 
@@ -207,6 +295,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 shot.update();
             }
 
+
             if (puffs.size() > 30) {
                 puffs.clear();
             }
@@ -233,10 +322,19 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             for (Shotgun shot: shotgunShots) {
                 shot.draw(canvas);
             }
-
+            for (Missile m: missiles) {
+                m.draw(canvas);
+            }
             canvas.restoreToCount(savedState);
         }
     }
 
+    public boolean collision(GameObject a, GameObject b) {
+
+        if (Rect.intersects(a.getRectangle(),b.getRectangle() )) {
+            return true;
+        }
+        return false;
+    }
 
 }
