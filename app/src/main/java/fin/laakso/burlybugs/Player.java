@@ -24,6 +24,8 @@ public class Player extends GameObject {
     private long startTime;
     private boolean parachute;
 
+    //private GameCamera camera;
+
 
     public Player(Bitmap res, int w, int h, int numFrames) {
         super.x = 100;
@@ -36,6 +38,7 @@ public class Player extends GameObject {
 
         Bitmap[] image = new Bitmap[numFrames];
         spritesheet = res;
+        //this.camera = camera;
 
         for (int i = 0; i< image.length; i++) {
             image[i] = Bitmap.createBitmap(spritesheet,i*width,0,width,height);
@@ -53,6 +56,12 @@ public class Player extends GameObject {
         this.moving = b;
         //dx = 0;
     }
+/*
+
+    public void setCamera(GameCamera camera) {
+        this.camera = camera;
+    }
+*/
 
     public void setDirection(float rawX,float rawY) {
 
@@ -319,6 +328,7 @@ public class Player extends GameObject {
 
     public void draw(Canvas canvas) {
        // Log.d("player DRAW","x/y: " + x +"/"+y);
+        // This may need offset in future
         canvas.drawBitmap(animation.getImage() , x , y ,null);
     }
 

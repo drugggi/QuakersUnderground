@@ -6,8 +6,10 @@ public class World {
 
     private int width, height;
     private int[][] tiles;
+    private GameCamera camera;
 
-    public World(String path) {
+    public World(GameCamera camera,String path) {
+        this.camera = camera;
         loadWorld(path);
     }
 
@@ -20,7 +22,7 @@ public class World {
         for (int y = 0 ; y < height ; y++) {
             for (int x = 0 ; x < width ; x++) {
                 if (tiles[y][x] != 0){
-                    getTile(x, y).draw(canvas, x * Tile.TILE_HEIGHT, y * Tile.TILE_HEIGHT);
+                    getTile(x, y).draw(canvas, x * Tile.TILE_HEIGHT - camera.getxOffset(), y * Tile.TILE_HEIGHT-camera.getyOffset());
                 }
             }
         }

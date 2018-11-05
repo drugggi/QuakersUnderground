@@ -56,27 +56,37 @@ public class Map {
     }
 
     public int[][] getRandomLevel() {
-        int width = rng.nextInt(20)+10;
-        int height = rng.nextInt(10)+10;
+        // Random size
+        int width = rng.nextInt(200)+100;
+        int height = rng.nextInt(200)+100;
+
+        width = 75;
+        height = 75;
 
         tiles = new int[height][width];
 
+        // Initialize empty map
         for (int y = 0; y < height ; y++) {
             for (int x = 0 ; x < width ; x++) {
                 tiles[y][x] = 0;
             }
         }
 
-        for (int floors = rng.nextInt(10); floors > 0 ; floors--) {
+        StringBuilder floorsCreated = new StringBuilder("F(y,x) =");
+        // Initialize random floors where to stand and hop
+        for (int floors = rng.nextInt(5)+5; floors > 0 ; floors--) {
             int floor_y = rng.nextInt(height);
             int floor_x = rng.nextInt(width-5);
+            floorsCreated.append(" " +floor_y+ "," + floor_x);
             for (int floor_length = rng.nextInt(width-floor_x); floor_length > 0; floor_length--) {
                 tiles[floor_y][floor_x+floor_length]=2;
             }
         }
 
-       tiles[2][5] = 2;
-       tiles[6][10] = 1;
+       // tiles[2][5] = 2;
+       // tiles[6][10] = 1;
+        Log.d("map size","y/x"+height + "/"+width);
+        Log.d("Floord created",floorsCreated.toString());
 
        return tiles;
 

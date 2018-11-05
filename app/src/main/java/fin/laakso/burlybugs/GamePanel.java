@@ -41,6 +41,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     Random rng;
 
+    private GameCamera camera;
+
     public GamePanel(Context context) {
         super(context);
 
@@ -59,13 +61,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
          bg = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.dry_soil) );
          player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.firstburlybug),40,40,4);
         testSheet = new SpriteSheet(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest));
-          bg.setVector(0,-1);
+        //   bg.setVector(0,-1);
         puffs = new ArrayList<Movepuff>();
         shotgunShots = new ArrayList<Shotgun>();
         missiles = new ArrayList<Missile>();
 
         //Assets gameAssets = new Assets(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest))
         Assets.init(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest));
+        camera = new GameCamera(player,128,64);
+       // player.setCamera(camera);
         puffStartTime = System.nanoTime();
         missileStartTime = System.nanoTime();
 
@@ -76,7 +80,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         player.setJumping(true);
 
         rng = new Random();
-        world = new World("");
+        world = new World(camera,"");
 
     }
 
@@ -212,6 +216,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         if (player.isPlaying() ) {
 
+            //camera.move(1,0);
+            camera.centerOnGameObject();
             bg.update();
             world.update();
             player.update();
@@ -311,6 +317,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             }
 
         }
+    }
+
+    public GameCamera getGameCamerera() {
+        return camera;
     }
 
     @Override
