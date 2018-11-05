@@ -37,6 +37,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     private SpriteSheet testSheet;
 
+    private World world;
+
     Random rng;
 
     public GamePanel(Context context) {
@@ -74,6 +76,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         player.setJumping(true);
 
         rng = new Random();
+        world = new World("");
 
     }
 
@@ -208,7 +211,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
 
         if (player.isPlaying() ) {
+
             bg.update();
+            world.update();
             player.update();
             //add missiles on timer
   /*
@@ -318,11 +323,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             final int savedState = canvas.save();
             canvas.scale(scaleFactorX,scaleFactorY);
 
+
             bg.draw(canvas);
+            world.draw(canvas);
             player.draw(canvas);
 
-            Bitmap testCrop = testSheet.crop(64,64,32,32);
-            canvas.drawBitmap(Assets.grass,100,100,null);
+
+            // Bitmap testCrop = testSheet.crop(64,64,32,32);
+            // canvas.drawBitmap(Assets.grass,200,200,null);
 
             //canvas.drawBitmap(testSheet.getSpritesheet(),10,10,null);
 
