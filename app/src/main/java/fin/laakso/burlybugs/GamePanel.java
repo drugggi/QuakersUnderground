@@ -68,8 +68,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         //Assets gameAssets = new Assets(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest))
         Assets.init(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest));
-        camera = new GameCamera(player,128,64);
-       // player.setCamera(camera);
+        camera = new GameCamera(player,0,0);
+        player.setCamera(camera);
+
         puffStartTime = System.nanoTime();
         missileStartTime = System.nanoTime();
 
@@ -81,7 +82,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         rng = new Random();
         world = new World(camera,"");
-
+        player.setWorldObject(world);
     }
 
     @Override

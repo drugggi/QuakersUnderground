@@ -24,8 +24,9 @@ public class Player extends GameObject {
     private long startTime;
     private boolean parachute;
 
-    //private GameCamera camera;
+    private GameCamera camera;
 
+    private World gameWorld;
 
     public Player(Bitmap res, int w, int h, int numFrames) {
         super.x = 100;
@@ -52,23 +53,27 @@ public class Player extends GameObject {
 
     }
 
+    public void setWorldObject(World world) {
+        gameWorld = world;
+    }
+
     public void setMoving(boolean b) {
         this.moving = b;
         //dx = 0;
     }
-/*
+
 
     public void setCamera(GameCamera camera) {
         this.camera = camera;
     }
-*/
+
 
     public void setDirection(float rawX,float rawY) {
 
 
         Log.d("parachute",""+parachute);
-        int directionX = (int ) rawX ;
-        int directionY = (int) rawY;
+        int directionX = (int ) rawX +camera.getxOffset() ;
+        int directionY = (int) rawY + camera.getyOffset() ;
          Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
         int differenceX = - (x - directionX);
         int differenceY = - (y - directionY);
@@ -117,11 +122,11 @@ public class Player extends GameObject {
     public Missile addMissile(float rawX,float rawY,Bitmap missileBM) {
 
 
-        int directionX = (int ) rawX ;
-        int directionY = (int) rawY;
-        // Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
+        int directionX = (int ) rawX +camera.getxOffset() ;
+        int directionY = (int) rawY+ camera.getyOffset() ;
+        //Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
         float differenceX =  (x - directionX);
-        float differenceY = (y - directionY);
+        float differenceY = (y- directionY);
 
         Log.d("Diffs",""+differenceX+"/"+differenceY);
         double angle = atan(differenceY/differenceX);
@@ -144,7 +149,7 @@ public class Player extends GameObject {
         if (differenceX < 0) {
             angle += 180;
         }
-        Missile newMissile = new Missile(missileBM,x,y,45,15,1,13,(float)angle);
+        Missile newMissile = new Missile(missileBM,x-camera.getxOffset(),y-camera.getyOffset(),45,15,1,13,(float)angle);
         newMissile.setVelocity(-velX/2,-velY/2);
 
         return newMissile;
@@ -235,11 +240,18 @@ public class Player extends GameObject {
         }
        // y = y + GamePanel.GRAVITY;
 
+
         x += dx ;
+        if (y > 0 && y <= gameWorld.getWorldHeight() - 40 && x > 0 && x < gameWorld.getWorldWidth() ) {
+            y += dy ;
+
+        }
+/*
         if (y > 0 && y <= GamePanel.HEIGHT - 40 && x > 0 && x < GamePanel.WIDTH) {
                 y += dy ;
 
         }
+*/
 
         if (x < 0) {
             x = 1;
@@ -250,17 +262,30 @@ public class Player extends GameObject {
             y = 1;
             dy = 0;
         }
-        if ( x > GamePanel.WIDTH -40 ) {
-            x = GamePanel.WIDTH -40 - 1;
+        if ( x > gameWorld.getWorldWidth() -40 ) {
+            x = gameWorld.getWorldWidth() -40 - 1;
             dx = 0;
             moving = false;
         }
+        //Log.d("player DRAW","x/y: " + x +"/"+y + "   dx/dy: " + dx + "/" + dy);
+        // Log.d("h","" + gameWorld.getWorldHeight() ) ;
+        if (y >= gameWorld.getWorldHeight() - 40) {
+            Log.d("h","" + gameWorld.getWorldHeight() ) ;
+             y = gameWorld.getWorldHeight() - 40;
+            dy = 0;
+
+            jumping = false;
+        }
+        // x += 1;
+/*
+
         if (y >= GamePanel.HEIGHT - 40) {
             y = GamePanel.HEIGHT - 40;
             dy = 0;
 
             jumping = false;
         }
+*/
 
         if (dx == 0) {
             moving = false;
@@ -329,7 +354,7 @@ public class Player extends GameObject {
     public void draw(Canvas canvas) {
        // Log.d("player DRAW","x/y: " + x +"/"+y);
         // This may need offset in future
-        canvas.drawBitmap(animation.getImage() , x , y ,null);
+        canvas.drawBitmap(animation.getImage() , x -camera.getxOffset(), y - camera.getyOffset(),null);
     }
 
     public int getScore() {
