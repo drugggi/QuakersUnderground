@@ -1,6 +1,7 @@
 package fin.laakso.burlybugs;
 
 import android.graphics.Canvas;
+import android.util.Log;
 
 public class World {
 
@@ -34,6 +35,11 @@ public class World {
     }
 
     public Tile getTile(int x, int y) {
+        if (x < 0 || y < 0 || x >= width || y >= height) {
+            Log.e("ERROR","getTile out of bounds: " + x + "/"+y);
+            return Tile.grassTile;
+        }
+
         Tile t = Tile.tileTypes[tiles[y][x]];
         if (t == null) {
             return Tile.grassTile;

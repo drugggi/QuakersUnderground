@@ -83,12 +83,12 @@ public class Player extends GameObject {
         // Log.d("Diffs",""+differenceX + "/" + differenceY);
 
         if (!moving && !jumping) {
-            dx = differenceX / 10;
+            dx = differenceX / 20;
             moving = true;
         }
         if (!jumping && differenceY < -20) {
             jumping = true;
-            dy = differenceY / 10;
+            dy = differenceY / 15;
         }
        //  Log.d("Diffs",""+differenceX + "/" + differenceY);
 /*
