@@ -242,7 +242,7 @@ public class Player extends GameObject {
 
 
         x += dx ;
-        if (y > 0 && y <= gameWorld.getWorldHeight() - 40 && x > 0 && x < gameWorld.getWorldWidth() ) {
+        if (y > 0 && y <= gameWorld.getWorldHeight() - super.height && x > 0 && x < gameWorld.getWorldWidth() ) {
             y += dy ;
 
         }
@@ -262,16 +262,16 @@ public class Player extends GameObject {
             y = 1;
             dy = 0;
         }
-        if ( x > gameWorld.getWorldWidth() -40 ) {
-            x = gameWorld.getWorldWidth() -40 - 1;
+        if ( x > gameWorld.getWorldWidth() -super.width ) {
+            x = gameWorld.getWorldWidth() -super.width - 1;
             dx = 0;
             moving = false;
         }
         //Log.d("player DRAW","x/y: " + x +"/"+y + "   dx/dy: " + dx + "/" + dy);
         // Log.d("h","" + gameWorld.getWorldHeight() ) ;
-        if (y >= gameWorld.getWorldHeight() - 40) {
+        if (y >= gameWorld.getWorldHeight() - super.height) {
             Log.d("h","" + gameWorld.getWorldHeight() ) ;
-             y = gameWorld.getWorldHeight() - 40;
+             y = gameWorld.getWorldHeight() - super.height;
             dy = 0;
 
             jumping = false;

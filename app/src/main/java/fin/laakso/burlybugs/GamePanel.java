@@ -59,7 +59,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
 
          bg = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.dry_soil) );
-         player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.firstburlybug),40,40,4);
+         player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.heroart),64,64,6);
         testSheet = new SpriteSheet(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest));
         //   bg.setVector(0,-1);
         puffs = new ArrayList<Movepuff>();
