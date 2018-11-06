@@ -29,7 +29,7 @@ public class Movepuff extends GameObject {
         Paint paint = new Paint();
         paint.setColor(Color.GRAY);
         paint.setStyle(Paint.Style.FILL);
-        paint.setAlpha(50);
+        paint.setAlpha(120);
 
         canvas.drawCircle(x-radius, y -radius, radius , paint);
 

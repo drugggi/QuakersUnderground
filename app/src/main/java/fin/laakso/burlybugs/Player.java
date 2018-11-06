@@ -23,12 +23,17 @@ public class Player extends GameObject {
     private Animation animation = new Animation();
     private long startTime;
     private boolean parachute;
+    private boolean anchor;
 
     private GameCamera camera;
 
     private World gameWorld;
 
+    private int updateAmount;
+
     public Player(Bitmap res, int w, int h, int numFrames) {
+        updateAmount = 0;
+
         super.x = 100;
         super.y = GamePanel.HEIGHT/2;
         // super.dy = 0;
@@ -67,49 +72,11 @@ public class Player extends GameObject {
         this.camera = camera;
     }
 
-
-    public void setDirection(float rawX,float rawY) {
-
-
-        Log.d("parachute",""+parachute);
-        int directionX = (int ) rawX +camera.getxOffset() ;
-        int directionY = (int) rawY + camera.getyOffset() ;
-         Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
-        int differenceX = - (x - directionX);
-        int differenceY = - (y - directionY);
-
-        // dy = differenceY;
-
-        // Log.d("Diffs",""+differenceX + "/" + differenceY);
-
-        if (!moving && !jumping) {
-            dx = differenceX / 20;
-            moving = true;
-        }
-        if (!jumping && differenceY < -20) {
-            jumping = true;
-            dy = differenceY / 15;
-        }
-       //  Log.d("Diffs",""+differenceX + "/" + differenceY);
-/*
-        if (x < directionX) {
-            dx = differenceX;
-            //x++;
-        }
-        else {
-            dx = -1;
-            // x--;
-        }
-
-        if(y < directionY ) {
-            dy = 1;
-            // y++;
-        }
-        else {
-            dy = -1;
-            // y--;
-        }*/
-
+    public void setAnchor(boolean a ) {
+        anchor = a;
+    }
+    public boolean isAnchor() {
+        return anchor;
     }
 
     public void setParachute(boolean p) {
@@ -132,8 +99,6 @@ public class Player extends GameObject {
         double angle = atan(differenceY/differenceX);
 
         // Log.d("angle","deeg "+angle);
-
-
 
         // Log.d("angle","rad "+angle);
 
@@ -187,30 +152,42 @@ public class Player extends GameObject {
         }
 
 
-/*
-
-        if (differenceX > 0) {
-            velX = 50;
-        }
-        else {
-            velX = -50;
-        }
-
-        if (differenceY > 0) {
-            velY = 50;
-        }
-        else {
-            velY = -50;
-        }
-*/
-
         Shotgun newShot = new Shotgun(x,y,4,velX,velY);
-
 
         return newShot;
     }
 
+    public void setDirection(float rawX,float rawY) {
+
+
+
+       // Log.d("parachute",""+parachute);
+        int directionX = (int ) rawX +camera.getxOffset() ;
+        int directionY = (int) rawY + camera.getyOffset() ;
+       // Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
+        int differenceX = - (x - directionX);
+        int differenceY = - (y - directionY);
+
+        // Log.d("Diffs",""+differenceX + "/" + differenceY);
+
+        // Tile pointedTile = gameWorld.getTile(differenceX/Tile.TILE_WIDTH,directionY/Tile.TILE_HEIGHT);
+        // Log.d("Tile",""+ pointedTile.toString() );
+        if (!moving && !jumping) {
+            dx = differenceX / 20;
+            moving = true;
+        }
+        if (!jumping && differenceY < -20) {
+            jumping = true;
+            dy = differenceY / 15;
+        }
+        //  Log.d("Diffs",""+differenceX + "/" + differenceY);
+
+
+    }
+
     public void update() {
+        updateAmount++;
+
         long elapsed = (System.nanoTime() - startTime)/1000000;
         if (elapsed > 100) {
             score++;
@@ -224,7 +201,7 @@ public class Player extends GameObject {
              dx = dx *  11 / 12;
             // dx = dx / 2;
         }
-
+        x += dx ;
         if (jumping) {
             if (parachute) {
                 dy = 1;
@@ -241,27 +218,22 @@ public class Player extends GameObject {
        // y = y + GamePanel.GRAVITY;
 
 
-        x += dx ;
+       //  x += dx ;
         if (y > 0 && y <= gameWorld.getWorldHeight() - super.height && x > 0 && x < gameWorld.getWorldWidth() ) {
-            y += dy ;
+            y += dy;
 
         }
-/*
-        if (y > 0 && y <= GamePanel.HEIGHT - 40 && x > 0 && x < GamePanel.WIDTH) {
-                y += dy ;
 
-        }
-*/
-
+        // player cant be left of the screen
         if (x < 0) {
             x = 1;
             dx = 0;
             moving = false;
-        }
+        } // over the screen
         if (y < 0) {
             y = 1;
             dy = 0;
-        }
+        } // right on the screen
         if ( x > gameWorld.getWorldWidth() -super.width ) {
             x = gameWorld.getWorldWidth() -super.width - 1;
             dx = 0;
@@ -269,83 +241,51 @@ public class Player extends GameObject {
         }
         //Log.d("player DRAW","x/y: " + x +"/"+y + "   dx/dy: " + dx + "/" + dy);
         // Log.d("h","" + gameWorld.getWorldHeight() ) ;
+        // down the screen
         if (y >= gameWorld.getWorldHeight() - super.height) {
-            Log.d("h","" + gameWorld.getWorldHeight() ) ;
+           //  Log.d("h","" + gameWorld.getWorldHeight() ) ;
              y = gameWorld.getWorldHeight() - super.height;
             dy = 0;
 
             jumping = false;
         }
-        // x += 1;
-/*
 
-        if (y >= GamePanel.HEIGHT - 40) {
-            y = GamePanel.HEIGHT - 40;
-            dy = 0;
-
-            jumping = false;
-        }
-*/
 
         if (dx == 0) {
             moving = false;
         }
 
+        //Collision detection
+        if (updateAmount % 60 == 0) {
+            Log.d("updateAmount",""+updateAmount);
+            Log.d("player POSITION","x/y: " + x +"/"+y + "   dx/dy: " + dx + "/" + dy);
+            Tile pointedTile = gameWorld.getTile(x/Tile.TILE_WIDTH,y/Tile.TILE_HEIGHT);
 
+        }
+        if (dy >= 0) {
 
-/*
+            Tile legTile = gameWorld.getTile((x) / Tile.TILE_WIDTH, (y+height) / Tile.TILE_HEIGHT);
+            // Log.d("Tile", "solid: " + legTile.isSolid() + "  " + legTile.toString());
 
-        if (y > 0 && y < GamePanel.HEIGHT - 25 && x > 0 && x < GamePanel.WIDTH) {
-            if (moving) {
-                x += dx / 50;
-                y += dy / 50;
-
+            if ( legTile.isSolid() ) {
+                dy = 0;
+                jumping = false;
+                // y =
             } else {
-                x += dx / 50;
-                y += dy / 50;
-
-                dx = dx / 2;
-                dy = dy / 2;
-
+                jumping = true;
             }
+
         }
 
-*/
-
-
-/*
-
-            dy = 0;
-            dx = 0;
-            up = false;
-*/
-
- /*           if (y < 0) { y += 5; dy = 0; }
-            else {y -= 5; dy = 0; }
-            if (x < 0) { x += 5; dx = 0;}
-            else {x -= 5; dx = 0;}*/
-
-/*
-
-        if (y > 0 && y < GamePanel.HEIGHT - 25) {
-            if (up) {
-                dy = (int) (dya -= 1.1);
-            } else {
-                dy = (int) (dya += 1.1);
+        else {
+            Tile headTile = gameWorld.getTile((x) / Tile.TILE_WIDTH, (y) / Tile.TILE_HEIGHT);
+            // Log.d("Tile", "solid: " + headTile.isSolid() + "  " + headTile.toString());
+            if ( headTile.isSolid() ) {
+                dy = 0;
+                // jumping = false;
+                // y =
             }
-
-            if (dy > 14) {
-                dy = 14;
-            }
-
-            if (dy < -14) {
-                dy = -14;
-            }
-
-            y += dy * 2;
         }
-*/
-
        // Log.d("player update","dx/dy: " + dx +"/"+dy);
 
         // dy = 0;

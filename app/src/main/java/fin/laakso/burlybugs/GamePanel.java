@@ -143,6 +143,45 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         switch (event.getAction() ) {
             case MotionEvent.ACTION_DOWN:
 
+                if (rawX < 100 && rawY > GamePanel.HEIGHT-100 ) {
+
+                    if (player.isJumping() ) {
+
+                        if (player.isParachute()) {
+                            player.setParachute(false);
+                        } else {
+                            player.setParachute(true);
+                        }
+
+                    }
+                    else {
+                        if (player.isAnchor() ) {
+                            player.setAnchor(false);
+                        }
+                        else {
+                            player.setAnchor(true);
+                        }
+                    }
+                    return true;
+                }
+
+                else {
+                    if (player.isJumping() ) {
+                        Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
+                        missiles.add(player.addMissile(rawX,rawY,missileBM)) ;
+                    }
+                    else if (player.isAnchor() ) {
+                        Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
+                        missiles.add(player.addMissile(rawX,rawY,missileBM)) ;
+                    }
+                    else {
+                        player.setDirection(rawX,rawY);
+                    }
+
+                }
+
+
+              /*
                 if (player.isJumping() ) {
 
                     if (rawX < 100 && rawY > GamePanel.HEIGHT-100 ) {
@@ -154,12 +193,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                         }
                         return true;
                     }
-
                     Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
+                    missiles.add(player.addMissile(rawX,rawY,missileBM)) ;*/
 
-                    missiles.add(player.addMissile(rawX,rawY,missileBM)) ;
 /*
-
                     shotgunShots.add(player.addShot(rawX,rawY) );
 
                     float rngFloatX = (float)rng.nextInt(20)-10;
@@ -172,9 +209,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
 */
 
-                } else {
-                    player.setDirection(rawX,rawY);
+/*                }
+                else if (player.isAnchor() ) {
+                    Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
+                    missiles.add(player.addMissile(rawX,rawY,missileBM)) ;
                 }
+
+                else {
+                    player.setDirection(rawX,rawY);
+                }*/
                 // Log.d("action","down");
 /*
 

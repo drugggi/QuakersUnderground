@@ -147,7 +147,7 @@ public class Map {
 
     public int getWidth() {
 
-        Log.d("length","tile.l: " + tiles.length +"  and tile[0].leng:: " + tiles[0].length);
+        // Log.d("length","tile.l: " + tiles.length +"  and tile[0].leng:: " + tiles[0].length);
 
         return tiles[0].length;
     }

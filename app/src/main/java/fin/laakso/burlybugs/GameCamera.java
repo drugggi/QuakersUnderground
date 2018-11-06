@@ -20,7 +20,7 @@ public class GameCamera {
 
     public void centerOnGameObject() {
         xOffset = objectToFollow.getX() - GamePanel.WIDTH / 2;
-        yOffset = objectToFollow.getY() - GamePanel.HEIGHT / 2;
+        yOffset = objectToFollow.getY() - GamePanel.HEIGHT  * 2 / 3;
        // Log.d("offsets","x/y: " + xOffset + "/"+yOffset);
 
         if (yOffset + GamePanel.HEIGHT > 2400 ) {
