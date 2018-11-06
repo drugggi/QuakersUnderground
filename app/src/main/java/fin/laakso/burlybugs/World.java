@@ -57,6 +57,10 @@ public class World {
 
     }
 
+    public GameCamera getCamera() {
+        return camera;
+    }
+
     public int getWorldHeight() {
         return height * Tile.TILE_HEIGHT;
     }

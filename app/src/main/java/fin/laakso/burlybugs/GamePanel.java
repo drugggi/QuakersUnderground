@@ -43,6 +43,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     private GameCamera camera;
 
+    private WeaponPanel weapons;
+
     public GamePanel(Context context) {
         super(context);
 
@@ -83,6 +85,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         rng = new Random();
         world = new World(camera,"");
         player.setWorldObject(world);
+        weapons = new WeaponPanel(camera);
     }
 
     @Override
@@ -143,7 +146,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         switch (event.getAction() ) {
             case MotionEvent.ACTION_DOWN:
 
-                if (rawX < 100 && rawY > GamePanel.HEIGHT-100 ) {
+                if (rawX < 150 && rawY > GamePanel.HEIGHT-150 ) {
 
                     if (player.isJumping() ) {
 
@@ -265,6 +268,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             bg.update();
             world.update();
             player.update();
+            weapons.update();
             //add missiles on timer
   /*
     long missileElapsed = (System.nanoTime() - missileStartTime)/1000000;
@@ -324,8 +328,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             if (elapsed > 120  ) {
 
                 if (player.isMoving() && !player.isJumping()) {
-                    //Log.d("add puff","yes");
-                    puffs.add(new Movepuff(player.getX(), player.getY() + 40, 5, player.getDX(), player.getDY()));
+                    Log.d("add puff","yes");
+                    puffs.add(new Movepuff(camera ,player.getX(), player.getY() + 64, 5, player.getDX(), player.getDY()));
+
                     puffStartTime = System.nanoTime();
                 }
                 else {
@@ -336,13 +341,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             }
             for (int i = 0; i < puffs.size() ; i++) {
                 puffs.get(i).update();
-
+/*
                 int tempX = puffs.get(i).getX();
                 int tempY = puffs.get(i).getY();
+
                 if (tempX < 0 || tempX > GamePanel.WIDTH || tempY < 0 || tempY > GamePanel.HEIGHT) {
                     puffs.remove(i);
-                }
-
+            }
+*/
             }
             for (int i = 0; i< shotgunShots.size() ; i++) {
                 int tempX = shotgunShots.get(i).getX();
@@ -381,14 +387,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             bg.draw(canvas);
             world.draw(canvas);
             player.draw(canvas);
+            weapons.draw(canvas);
 
 
             // Bitmap testCrop = testSheet.crop(64,64,32,32);
             // canvas.drawBitmap(Assets.grass,200,200,null);
 
             //canvas.drawBitmap(testSheet.getSpritesheet(),10,10,null);
-
+            Log.d("puffsize","" + puffs.size());
             for (Movepuff mp: puffs) {
+                Log.d("jeh","jeh");
                 mp.draw(canvas);
             }
             for (Shotgun shot: shotgunShots) {
