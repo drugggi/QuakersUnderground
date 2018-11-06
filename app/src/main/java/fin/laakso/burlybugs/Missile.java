@@ -17,9 +17,12 @@ public class Missile extends GameObject {
     private int velocityX;
     private int velocityY;
 
-    public Missile(Bitmap res,int x, int y, int w, int h, int s, int numFrames, float angle) {
-        super.x = x;
-        super.y = y;
+    private GameCamera camera;
+
+    public Missile(GameCamera camera,Bitmap res,int x, int y, int w, int h, int s, int numFrames, float angle) {
+
+        super.x = x; // x-camera.getxOffset();
+        super.y = y; //y-camera.getyOffset();
         width = w;
         height = h;
         score = s;
@@ -40,6 +43,7 @@ public class Missile extends GameObject {
             image[i] = Animation.rotateImage(image[i],angle);
         }
 
+        this.camera = camera;
         animation.setFrames(image);
         animation.setDelay(100-speed);
     }
@@ -47,9 +51,10 @@ public class Missile extends GameObject {
     public void update() {
        //  x -= speed;
 
-       // Log.d("vels",""+ velocityX +"/" + velocityY);
+        Log.d("MISSILE X/y",""+ x +"/" + y);
         x += velocityX;
         y += velocityY;
+
 
         //velocityX++;
         //velocityY++;
@@ -64,8 +69,10 @@ public class Missile extends GameObject {
     }
 
     public void draw(Canvas canvas) {
+       //Log.d("missiles x/y",""+x+"/" + y + "  offsetxy " + camera.getxOffset() + "/" + camera.getyOffset());
+      // Log.d("Missile drapos",(x-camera.getxOffset())+"/"+(y-camera.getyOffset()));
         try {
-            canvas.drawBitmap(animation.getImage(),x,y,null);
+            canvas.drawBitmap(animation.getImage(),x-camera.getxOffset(),y-camera.getyOffset(),null);
 
         } catch (Exception e) {
 

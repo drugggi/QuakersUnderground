@@ -114,7 +114,7 @@ public class Player extends GameObject {
         if (differenceX < 0) {
             angle += 180;
         }
-        Missile newMissile = new Missile(missileBM,x-camera.getxOffset(),y-camera.getyOffset(),45,15,1,13,(float)angle);
+        Missile newMissile = new Missile(camera,missileBM,x,y,45,15,1,13,(float)angle);
         newMissile.setVelocity(-velX/2,-velY/2);
 
         return newMissile;
@@ -172,13 +172,17 @@ public class Player extends GameObject {
 
         // Tile pointedTile = gameWorld.getTile(differenceX/Tile.TILE_WIDTH,directionY/Tile.TILE_HEIGHT);
         // Log.d("Tile",""+ pointedTile.toString() );
+
+
+
         if (!moving && !jumping) {
             dx = differenceX / 20;
             moving = true;
         }
+
         if (!jumping && differenceY < -20) {
             jumping = true;
-            dy = differenceY / 15;
+            dy = differenceY / 15 ;
         }
         //  Log.d("Diffs",""+differenceX + "/" + differenceY);
 
@@ -259,6 +263,7 @@ public class Player extends GameObject {
         if (updateAmount % 60 == 0) {
             Log.d("updateAmount",""+updateAmount);
             Log.d("player POSITION","x/y: " + x +"/"+y + "   dx/dy: " + dx + "/" + dy);
+            Log.d("offsets","xOFF/yOFF: " + camera.getxOffset() +"/"+camera.getyOffset());
             Tile pointedTile = gameWorld.getTile(x/Tile.TILE_WIDTH,y/Tile.TILE_HEIGHT);
 
         }

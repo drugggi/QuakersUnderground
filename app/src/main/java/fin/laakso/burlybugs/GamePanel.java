@@ -85,7 +85,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         rng = new Random();
         world = new World(camera,"");
         player.setWorldObject(world);
-        weapons = new WeaponPanel(camera);
+        weapons = new WeaponPanel();
     }
 
     @Override
@@ -170,12 +170,23 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
                 else {
                     if (player.isJumping() ) {
-                        Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
-                        missiles.add(player.addMissile(rawX,rawY,missileBM)) ;
+
+                        long missileElapsed = (System.nanoTime() - missileStartTime)/1000000;
+
+                        if (missileElapsed > (500)) {
+                            Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
+                            missiles.add(player.addMissile(rawX,rawY,missileBM)) ;
+                            missileStartTime = System.nanoTime();
+                        }
                     }
                     else if (player.isAnchor() ) {
-                        Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
-                        missiles.add(player.addMissile(rawX,rawY,missileBM)) ;
+                        long missileElapsed = (System.nanoTime() - missileStartTime)/1000000;
+
+                        if (missileElapsed > (500)) {
+                            Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
+                            missiles.add(player.addMissile(rawX,rawY,missileBM)) ;
+                            missileStartTime = System.nanoTime();
+                        }
                     }
                     else {
                         player.setDirection(rawX,rawY);
@@ -317,8 +328,34 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 */
             for (int i = 0 ; i < missiles.size() ; i++) {
                 missiles.get(i).update();
-                if (missiles.get(i).getX() < -WIDTH || missiles.get(i).getX() > 2*WIDTH ||
-                        missiles.get(i).getY() < -HEIGHT || missiles.get(i).getY() > 2*HEIGHT) {
+
+                int misX = missiles.get(i).getX() - 5;
+                int misY = missiles.get(i).getY() - 5;
+
+                int tileX = misX/Tile.TILE_WIDTH;
+                int tileY = misY/Tile.TILE_HEIGHT;
+
+
+                Tile missileTile = world.getTile(tileX,tileY);
+                // Log.d("Tile", x+"/"+y+"  solid: " + missileTile.isSolid() + "  " + missileTile.toString());
+                if (missileTile.isSolid() ) {
+                    Log.e("MISSILEHIT","SOLID");
+
+                    for (int yy = -1 ; yy < 2 ; yy++) {
+                        for (int xx = -1 ; xx < 2 ; xx++) {
+                            world.setTile(tileX+xx,tileY+yy,0);
+                        }
+                    }
+
+
+
+
+                    missiles.remove(i);
+                }
+                // Log.d("Tile",""+ pointedTile.toString() );
+
+                if (misX < 0 || misX > world.getWorldWidth() ||
+                        misY < 0 || misY > world.getWorldHeight() ) {
                     missiles.remove(i);
                 }
             }
@@ -394,9 +431,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             // canvas.drawBitmap(Assets.grass,200,200,null);
 
             //canvas.drawBitmap(testSheet.getSpritesheet(),10,10,null);
-            Log.d("puffsize","" + puffs.size());
+
             for (Movepuff mp: puffs) {
-                Log.d("jeh","jeh");
+
                 mp.draw(canvas);
             }
             for (Shotgun shot: shotgunShots) {

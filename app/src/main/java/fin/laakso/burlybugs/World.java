@@ -47,6 +47,17 @@ public class World {
         return t;
     }
 
+    public void setTile(int x, int y, int newTileId) {
+
+        if (x < 0 || y < 0 || x >= width || y >= height) {
+            Log.e("ERROR","getTile out of bounds: " + x + "/"+y);
+            return;
+        }
+        else {
+            tiles[y][x] = newTileId;
+        }
+    }
+
     private void loadWorld(String path) {
 
         Map generateMap = new Map();

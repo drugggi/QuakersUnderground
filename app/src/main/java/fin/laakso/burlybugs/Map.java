@@ -127,7 +127,7 @@ public class Map {
 
         StringBuilder floorsCreated = new StringBuilder("F(y,x) =");
         // Initialize random floors where to stand and hop
-        for (int floors = rng.nextInt(5)+5; floors > 0 ; floors--) {
+        for (int floors = rng.nextInt(25)+25; floors > 0 ; floors--) {
             int floor_y = rng.nextInt(height);
             int floor_x = rng.nextInt(width-5);
             floorsCreated.append(" " +floor_y+ "," + floor_x);
