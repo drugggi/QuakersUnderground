@@ -34,7 +34,7 @@ public class Player extends GameObject {
     public Player(Bitmap res, int w, int h, int numFrames) {
         updateAmount = 0;
 
-        super.x = 100;
+        super.x = 600;
         super.y = GamePanel.HEIGHT/2;
         // super.dy = 0;
         super.height = h;
@@ -98,9 +98,9 @@ public class Player extends GameObject {
         Log.d("Diffs",""+differenceX+"/"+differenceY);
         double angle = atan(differenceY/differenceX);
 
-        // Log.d("angle","deeg "+angle);
+         Log.d("angle","deeg "+angle);
 
-        // Log.d("angle","rad "+angle);
+         Log.d("angle","rad "+angle);
 
         int velX = (int) (50 * cos(angle));
         int velY = (int) (50 * sin(angle));
@@ -191,12 +191,13 @@ public class Player extends GameObject {
 
     public void update() {
         updateAmount++;
-
+/*
         long elapsed = (System.nanoTime() - startTime)/1000000;
         if (elapsed > 100) {
             score++;
             startTime = System.nanoTime();
         }
+        */
         animation.update();
 
         //Log.d("PLAYER UPDATE","jump: " + jumping + "   x/y: "+x+"/"+y+"  dx/dy: " +dx + "/" + dy);
@@ -225,7 +226,6 @@ public class Player extends GameObject {
        //  x += dx ;
         if (y > 0 && y <= gameWorld.getWorldHeight() - super.height && x > 0 && x < gameWorld.getWorldWidth() ) {
             y += dy;
-
         }
 
         // player cant be left of the screen
