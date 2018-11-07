@@ -113,12 +113,33 @@ public class Enemy extends GameObject {
 
     }
 
+    public void setKnockBack(int knockX, int knockY) {
+        if (x < knockX) {
+            dx = -20;
+        }
+        else {
+            dx = 20;
+        }
+
+        if (y < knockY) {
+            y -= 100;
+            dy = -20;
+            jumping = true;
+        }
+        else {
+            y -= 100;
+            dy = -20;
+            jumping = true;
+        }
+
+    }
+
     public void update() {
         animation.update();
         updateAmount++;
         // makeIntelligentDecision();
 
-       // dx = dx *  110 / 111;
+        dx = dx *  11 / 12;
         x += dx ;
         if (jumping) {
             if (parachute) {

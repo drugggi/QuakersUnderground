@@ -373,16 +373,21 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
                     weaponEffects.add(new WeaponEffect(camera,explosion,misX,misY,100,100,25));
                     missiles.remove(i);
+
                 }
                 if (missiles.get(i).isActivated() && collision(missiles.get(i),enemy)) {
                     Log.e("WE HAVE A HIT","ENEMY YES");
-                    enemy.setX(100);
-                    enemy.setY(100);
+                    //enemy.setX(100);
+                   // enemy.setY(100);
                     Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
                     weaponEffects.add(new WeaponEffect(camera,explosion,misX,misY,100,100,25));
                     missiles.remove(i);
+
+                    enemy.setKnockBack(misX,misY);
                 }
 
+
+                // CREATE RECTANGLES
                 Tile missileTile = world.getTile(tileX,tileY);
                 // Log.d("Tile", x+"/"+y+"  solid: " + missileTile.isSolid() + "  " + missileTile.toString());
                 if (missileTile.isSolid() ) {
