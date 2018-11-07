@@ -114,23 +114,33 @@ public class Enemy extends GameObject {
     }
 
     public void setKnockBack(int knockX, int knockY) {
-        if (x < knockX) {
-            dx = -20;
-        }
-        else {
-            dx = 20;
-        }
 
-        if (y < knockY) {
-            y -= 100;
-            dy = -20;
-            jumping = true;
-        }
-        else {
-            y -= 100;
-            dy = -20;
-            jumping = true;
-        }
+        int differenceX = getCenterX() - knockX;
+        int differenceY = getCenterY() - knockY;
+
+        //Log.d("KNOCKBACK","center x/y: " + getCenterX() + "/"+getCenterY()+ " knox/y"+knockX + "/" +knockY + "  diff:" + differenceX+ "/" + differenceY);
+
+            if (differenceX > 0) {
+                x += 10;
+                dx = 20;
+            } else {
+                x += -10;
+                dx = -20;
+            }
+
+            // explosion over head, knockback downwards
+            if (differenceY > 0) {
+                y += 50;
+                dy += 20;
+                jumping = true;
+
+            } // explosion under enemy, knockback upwards
+            else {
+                y += -50;
+                dy += -20;
+                jumping = true;
+            }
+
 
     }
 
@@ -193,6 +203,7 @@ public class Enemy extends GameObject {
             // Log.d("Tile", "solid: " + legTile.isSolid() + "  " + legTile.toString());
 
             if ( legTile.isSolid() ) {
+
                 dy = 0;
                 jumping = false;
                 // y =

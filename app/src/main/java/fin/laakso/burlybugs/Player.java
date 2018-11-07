@@ -217,6 +217,34 @@ public class Player extends GameObject {
 
     }
 
+    public void setKnockBack(int knockX, int knockY) {
+
+        int differenceX = getCenterX() - knockX;
+        int differenceY = getCenterY() - knockY;
+
+        //Log.d("KNOCKBACK","center x/y: " + getCenterX() + "/"+getCenterY()+ " knox/y"+knockX + "/" +knockY + "  diff:" + differenceX+ "/" + differenceY);
+
+        if (differenceX > 0) {
+            dx = 20;
+        } else {
+            dx = -20;
+        }
+
+        // explosion over head, knockback downwards
+        if (differenceY > 0) {
+            y += 50;
+            dy += 20;
+            jumping = true;
+
+        } // explosion under enemy, knockback upwards
+        else {
+            y += -50;
+            dy += -20;
+            jumping = true;
+        }
+
+    }
+
     public void update() {
         updateAmount++;
 /*
@@ -289,7 +317,7 @@ public class Player extends GameObject {
         }
 
         //Collision detection
-        if (updateAmount % 60 == 0) {
+        if (updateAmount % 150 == 0) {
             Log.d("updateAmount",""+updateAmount);
             Log.d("player POSITION","x/y: " + x +"/"+y + "   dx/dy: " + dx + "/" + dy);
             Log.d("offsets","xOFF/yOFF: " + camera.getxOffset() +"/"+camera.getyOffset());

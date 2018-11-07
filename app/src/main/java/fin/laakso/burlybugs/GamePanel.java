@@ -360,6 +360,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             for (int i = 0 ; i < missiles.size() ; i++) {
                 missiles.get(i).update();
 
+                Log.d("missiles","size: " +missiles.size() );
+
+                // Maybe this should be center of the missile
                 int misX = missiles.get(i).getX();
                 int misY = missiles.get(i).getY();
 
@@ -368,11 +371,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
                 if (missiles.get(i).isActivated() && collision(missiles.get(i),player) ) {
                     Log.e("WE HAVE A HIT","PLAUER YES");
-                    player.setX(100);
-                    player.setY(100);
+                    //player.setX(100);
+                    //player.setY(100);
                     Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
                     weaponEffects.add(new WeaponEffect(camera,explosion,misX,misY,100,100,25));
                     missiles.remove(i);
+                    continue;
 
                 }
                 if (missiles.get(i).isActivated() && collision(missiles.get(i),enemy)) {
@@ -382,8 +386,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
                     weaponEffects.add(new WeaponEffect(camera,explosion,misX,misY,100,100,25));
                     missiles.remove(i);
+                    continue;
 
-                    enemy.setKnockBack(misX,misY);
                 }
 
 
@@ -418,7 +422,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             if (elapsed > 120  ) {
 
                 if (player.isMoving() && !player.isJumping()) {
-                    Log.d("add puff","yes");
+                    //Log.d("add puff","yes");
                     puffs.add(new Movepuff(camera ,player.getX(), player.getY() + 64, 5, player.getDX(), player.getDY()));
 
                     puffStartTime = System.nanoTime();
@@ -443,17 +447,45 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             for (Shotgun shot: shotgunShots) {
                 shot.update();
             }
-
+            Log.d("weap size",""+weaponEffects.size());
             for (int i = 0; i < weaponEffects.size() ; i++) {
                 weaponEffects.get(i).update();
+
+               //Log.d("weap size",""+weaponEffects.size());
+
                 if (weaponEffects.get(i).finished() ) {
                     weaponEffects.remove(i);
+                    continue;
+                }
+
+                if (!weaponEffects.get(i).isKnockBackApplied() ) {
+
+                    if (collision(weaponEffects.get(i),enemy)) {
+                        Log.d("kertakerta","taas kerta");
+                        int misX = weaponEffects.get(i).getCenterX();
+                        int misY = weaponEffects.get(i).getCenterY();
+                        enemy.setKnockBack(misX, misY);
+
+                    }
+                    if (collision(weaponEffects.get(i),player)) {
+                        Log.d("kertakerta","taas kerta");
+                        int misX = weaponEffects.get(i).getCenterX();
+                        int misY = weaponEffects.get(i).getCenterY();
+                        player.setKnockBack(misX, misY);
+
+                    }
+
+                    weaponEffects.get(i).setKnockBackApplied(true);
+                    //  player.setKnockBack(misX,misY);
+
                 }
             }
 
+/*
             for (WeaponEffect effect: weaponEffects) {
                 effect.update();
             }
+*/
 
             if (puffs.size() > 30) {
                 puffs.clear();

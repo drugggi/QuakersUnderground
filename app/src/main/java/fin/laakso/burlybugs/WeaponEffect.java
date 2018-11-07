@@ -13,6 +13,7 @@ public class WeaponEffect extends GameObject {
     private Bitmap spritesheet;
 
     private GameCamera camera;
+    private boolean knockBackApplied;
 
     public WeaponEffect(GameCamera camera, Bitmap res, int x, int y, int w, int h, int numFrames) {
 
@@ -32,9 +33,10 @@ public class WeaponEffect extends GameObject {
            }
         }
 
+        knockBackApplied = false;
         this.camera = camera;
         animation.setFrames(image);
-        animation.setDelay(100);
+        animation.setDelay(50);
 
     }
 
@@ -44,6 +46,15 @@ public class WeaponEffect extends GameObject {
         animation.update();
 
     }
+
+    public boolean isKnockBackApplied() {
+        return knockBackApplied;
+    }
+
+    public void setKnockBackApplied(boolean kb) {
+        knockBackApplied = kb;
+    }
+
 
     public boolean finished() {
         return animation.playedOnce();
