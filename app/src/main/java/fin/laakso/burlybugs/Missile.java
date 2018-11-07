@@ -102,7 +102,7 @@ public class Missile extends GameObject {
 
     @Override
     public Rect getRectangle() {
-        return new Rect(x+5,y+5,x+10,y+20);
+        return new Rect(x,y,x+15,y+15);
     }
 
 

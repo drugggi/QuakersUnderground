@@ -36,6 +36,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private long puffStartTime;
 
     private ArrayList<Shotgun> shotgunShots;
+    private ArrayList<WeaponEffect> weaponEffects;
 
     private ArrayList<Missile> missiles;
     private long missileStartTime;
@@ -68,6 +69,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
          bg = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.dry_soil) );
          player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.heroart),64,64,6);
          enemy = new Enemy(BitmapFactory.decodeResource(getResources(),R.drawable.heroart),64,64,6);
+         weaponEffects = new ArrayList<>();
 
         testSheet = new SpriteSheet(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest));
         //   bg.setVector(0,-1);
@@ -358,8 +360,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             for (int i = 0 ; i < missiles.size() ; i++) {
                 missiles.get(i).update();
 
-                int misX = missiles.get(i).getX() - 5;
-                int misY = missiles.get(i).getY() - 5;
+                int misX = missiles.get(i).getX();
+                int misY = missiles.get(i).getY();
 
                 int tileX = misX/Tile.TILE_WIDTH;
                 int tileY = misY/Tile.TILE_HEIGHT;
@@ -368,17 +370,26 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     Log.e("WE HAVE A HIT","PLAUER YES");
                     player.setX(100);
                     player.setY(100);
+                    Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
+                    weaponEffects.add(new WeaponEffect(camera,explosion,misX,misY,100,100,25));
+                    missiles.remove(i);
                 }
                 if (missiles.get(i).isActivated() && collision(missiles.get(i),enemy)) {
                     Log.e("WE HAVE A HIT","ENEMY YES");
                     enemy.setX(100);
                     enemy.setY(100);
+                    Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
+                    weaponEffects.add(new WeaponEffect(camera,explosion,misX,misY,100,100,25));
+                    missiles.remove(i);
                 }
 
                 Tile missileTile = world.getTile(tileX,tileY);
                 // Log.d("Tile", x+"/"+y+"  solid: " + missileTile.isSolid() + "  " + missileTile.toString());
                 if (missileTile.isSolid() ) {
                     Log.e("MISSILEHIT","SOLID");
+
+                    Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
+                    weaponEffects.add(new WeaponEffect(camera,explosion,misX,misY,100,100,25));
 
                     for (int yy = -1 ; yy < 2 ; yy++) {
                         for (int xx = -1 ; xx < 2 ; xx++) {
@@ -415,14 +426,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             }
             for (int i = 0; i < puffs.size() ; i++) {
                 puffs.get(i).update();
-/*
-                int tempX = puffs.get(i).getX();
-                int tempY = puffs.get(i).getY();
 
-                if (tempX < 0 || tempX > GamePanel.WIDTH || tempY < 0 || tempY > GamePanel.HEIGHT) {
-                    puffs.remove(i);
-            }
-*/
             }
             for (int i = 0; i< shotgunShots.size() ; i++) {
                 int tempX = shotgunShots.get(i).getX();
@@ -435,6 +439,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 shot.update();
             }
 
+            for (int i = 0; i < weaponEffects.size() ; i++) {
+                weaponEffects.get(i).update();
+                if (weaponEffects.get(i).finished() ) {
+                    weaponEffects.remove(i);
+                }
+            }
+
+            for (WeaponEffect effect: weaponEffects) {
+                effect.update();
+            }
 
             if (puffs.size() > 30) {
                 puffs.clear();
@@ -479,6 +493,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             }
             for (Missile m: missiles) {
                 m.draw(canvas);
+            }
+
+            for (WeaponEffect effect: weaponEffects) {
+                effect.draw(canvas);
             }
             canvas.restoreToCount(savedState);
         }
