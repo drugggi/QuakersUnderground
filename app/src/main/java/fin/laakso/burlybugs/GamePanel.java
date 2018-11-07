@@ -160,7 +160,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         float rawX = event.getRawX() *  WIDTH / getWidth();
         float rawY = event.getRawY() * HEIGHT / getHeight();
 
-        if (player.isJumping() ) {
+        if (player.isJumping() && !player.isParachute()) {
             player.keepDirection(rawX,rawY);
         }
         switch (event.getAction() ) {

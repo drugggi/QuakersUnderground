@@ -29,6 +29,8 @@ public class Enemy extends GameObject {
     Random rng;
     private int nextDecision;
 
+    int health ;
+
     public Enemy(Bitmap res, int w, int h, int numFrames) {
 
         super.x = 700;
@@ -43,6 +45,9 @@ public class Enemy extends GameObject {
         Bitmap[] image = new Bitmap[numFrames];
         spritesheet = res;
         //this.camera = camera;
+
+
+        health = 300;
 
         int j = 0;
         for (int i = image.length-1; i >=0; i--) {
@@ -118,29 +123,44 @@ public class Enemy extends GameObject {
         int differenceX = getCenterX() - knockX;
         int differenceY = getCenterY() - knockY;
 
+
+
         //Log.d("KNOCKBACK","center x/y: " + getCenterX() + "/"+getCenterY()+ " knox/y"+knockX + "/" +knockY + "  diff:" + differenceX+ "/" + differenceY);
 
         //Log.d("Difference","  diff:" + differenceX+ "/" + differenceY);
-            if (differenceX > 0) {
+
+        health -= 100;
+        if (differenceX > 0) {
                 x += 10;
                 dx = 20;
-            } else {
+                health += differenceX;
+        } else {
                 x += -10;
                 dx = -20;
-            }
+                health -= differenceX;
+        }
 
             // explosion over head, knockback downwards
-            if (differenceY > 0) {
+        if (differenceY > 0) {
                 y += 50;
                 dy += 20;
                 jumping = true;
+                health += differenceY;
 
             } // explosion under enemy, knockback upwards
-            else {
+        else {
                 y += -50;
                 dy += -20;
                 jumping = true;
-            }
+                health -= differenceY;
+        }
+        if (health <= 0) {
+            x = 100;
+            y = 100;
+            health = 300;
+        }
+
+        Log.d("Health","HEALTH: " + health);
 
 
     }
