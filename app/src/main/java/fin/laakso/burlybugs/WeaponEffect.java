@@ -78,4 +78,6 @@ public class WeaponEffect extends GameObject {
         return width;
     }
 
+
+
 }

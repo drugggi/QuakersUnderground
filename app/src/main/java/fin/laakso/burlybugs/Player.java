@@ -223,7 +223,7 @@ public class Player extends GameObject {
         int differenceY = getCenterY() - knockY;
 
         //Log.d("KNOCKBACK","center x/y: " + getCenterX() + "/"+getCenterY()+ " knox/y"+knockX + "/" +knockY + "  diff:" + differenceX+ "/" + differenceY);
-
+        Log.d("Difference","  diff:" + differenceX+ "/" + differenceY);
         if (differenceX > 0) {
             dx = 20;
         } else {

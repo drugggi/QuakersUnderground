@@ -88,15 +88,15 @@ public class Enemy extends GameObject {
             else {
                 shootingTime = true;
             }
-        Log.d("ENEMY DIRECTION", "diffx/diffy: " + differenceX + "/" + differenceY + "   dx/dy: " + dx + "/" + dy);
+      //  Log.d("ENEMY DIRECTION", "diffx/diffy: " + differenceX + "/" + differenceY + "   dx/dy: " + dx + "/" + dy);
 
     }
 
     private void makeIntelligentDecision() {
 
         if (updateAmount % 30 == 0) {
-            Log.d("ENEMY STATE", "moving:  " + moving + "  jump: " + jumping + "  anch: " + anchor + "  para: " + parachute);
-            Log.d("ENEMY STATE", "x/y: " + x + "/" + y + "   dx/dy: " + dx + "/" + dy);
+         //   Log.d("ENEMY STATE", "moving:  " + moving + "  jump: " + jumping + "  anch: " + anchor + "  para: " + parachute);
+         //   Log.d("ENEMY STATE", "x/y: " + x + "/" + y + "   dx/dy: " + dx + "/" + dy);
         }
 
         if (updateAmount % nextDecision == 0) {
@@ -120,6 +120,7 @@ public class Enemy extends GameObject {
 
         //Log.d("KNOCKBACK","center x/y: " + getCenterX() + "/"+getCenterY()+ " knox/y"+knockX + "/" +knockY + "  diff:" + differenceX+ "/" + differenceY);
 
+        //Log.d("Difference","  diff:" + differenceX+ "/" + differenceY);
             if (differenceX > 0) {
                 x += 10;
                 dx = 20;
@@ -147,7 +148,7 @@ public class Enemy extends GameObject {
     public void update() {
         animation.update();
         updateAmount++;
-        // makeIntelligentDecision();
+        makeIntelligentDecision();
 
         dx = dx *  11 / 12;
         x += dx ;

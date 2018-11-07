@@ -37,6 +37,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     private ArrayList<Shotgun> shotgunShots;
     private ArrayList<WeaponEffect> weaponEffects;
+    private ArrayList<GameItem> items;
 
     private ArrayList<Missile> missiles;
     private long missileStartTime;
@@ -70,6 +71,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
          player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.heroart),64,64,6);
          enemy = new Enemy(BitmapFactory.decodeResource(getResources(),R.drawable.heroart),64,64,6);
          weaponEffects = new ArrayList<>();
+         items = new ArrayList<>();
 
         testSheet = new SpriteSheet(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest));
         //   bg.setVector(0,-1);
@@ -177,6 +179,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     }
                     else {
                         if (player.isAnchor() ) {
+                            items.add(new GameItem(world,0,0,150));
                             player.setAnchor(false);
                         }
                         else {
@@ -298,6 +301,20 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             world.update();
             player.update();
             enemy.update();
+
+            for (int i = 0 ; i < items.size() ; i++) {
+                items.get(i).update();
+                if (collision(items.get(i),player)) {
+                    items.remove(i);
+                    continue;
+                }
+                if (collision(items.get(i),enemy)) {
+                    items.remove(i);
+
+                }
+            }
+
+
             if (enemy.isShootingTime() ) {
                 Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
 
@@ -360,7 +377,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             for (int i = 0 ; i < missiles.size() ; i++) {
                 missiles.get(i).update();
 
-                Log.d("missiles","size: " +missiles.size() );
+                // Log.d("missiles","size: " +missiles.size() );
 
                 // Maybe this should be center of the missile
                 int misX = missiles.get(i).getX();
@@ -370,7 +387,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 int tileY = misY/Tile.TILE_HEIGHT;
 
                 if (missiles.get(i).isActivated() && collision(missiles.get(i),player) ) {
-                    Log.e("WE HAVE A HIT","PLAUER YES");
+                   // Log.e("WE HAVE A HIT","PLAUER YES");
                     //player.setX(100);
                     //player.setY(100);
                     Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
@@ -380,7 +397,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
                 }
                 if (missiles.get(i).isActivated() && collision(missiles.get(i),enemy)) {
-                    Log.e("WE HAVE A HIT","ENEMY YES");
+                   // Log.e("WE HAVE A HIT","ENEMY YES");
                     //enemy.setX(100);
                    // enemy.setY(100);
                     Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
@@ -395,7 +412,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 Tile missileTile = world.getTile(tileX,tileY);
                 // Log.d("Tile", x+"/"+y+"  solid: " + missileTile.isSolid() + "  " + missileTile.toString());
                 if (missileTile.isSolid() ) {
-                    Log.e("MISSILEHIT","SOLID");
+                   // Log.e("MISSILEHIT","SOLID");
 
                     Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
                     weaponEffects.add(new WeaponEffect(camera,explosion,misX,misY,100,100,25));
@@ -447,7 +464,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             for (Shotgun shot: shotgunShots) {
                 shot.update();
             }
-            Log.d("weap size",""+weaponEffects.size());
+           // Log.d("weap size",""+weaponEffects.size());
             for (int i = 0; i < weaponEffects.size() ; i++) {
                 weaponEffects.get(i).update();
 
@@ -461,14 +478,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 if (!weaponEffects.get(i).isKnockBackApplied() ) {
 
                     if (collision(weaponEffects.get(i),enemy)) {
-                        Log.d("kertakerta","taas kerta");
+                 //       Log.d("kertakerta","taas kerta");
                         int misX = weaponEffects.get(i).getCenterX();
                         int misY = weaponEffects.get(i).getCenterY();
                         enemy.setKnockBack(misX, misY);
 
                     }
                     if (collision(weaponEffects.get(i),player)) {
-                        Log.d("kertakerta","taas kerta");
+                     //   Log.d("kertakerta","taas kerta");
                         int misX = weaponEffects.get(i).getCenterX();
                         int misY = weaponEffects.get(i).getCenterY();
                         player.setKnockBack(misX, misY);
@@ -535,6 +552,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             for (WeaponEffect effect: weaponEffects) {
                 effect.draw(canvas);
             }
+            for (GameItem item: items) {
+                item.draw(canvas);
+            }
+
             canvas.restoreToCount(savedState);
         }
     }

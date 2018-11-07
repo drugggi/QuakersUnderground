@@ -33,7 +33,7 @@ public class Movepuff extends GameObject {
         Paint paint = new Paint();
         paint.setColor(Color.GRAY);
         paint.setStyle(Paint.Style.FILL);
-        paint.setAlpha(120);
+        paint.setAlpha(170);
 
         //Log.d("DRAW PUFF X/Y","" + x + "/" + y);
 
