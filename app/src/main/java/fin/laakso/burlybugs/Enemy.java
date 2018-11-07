@@ -116,7 +116,7 @@ public class Enemy extends GameObject {
     public void update() {
         animation.update();
         updateAmount++;
-        makeIntelligentDecision();
+        // makeIntelligentDecision();
 
        // dx = dx *  110 / 111;
         x += dx ;

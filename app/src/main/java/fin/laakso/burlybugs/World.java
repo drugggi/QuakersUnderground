@@ -36,7 +36,7 @@ public class World {
 
     public Tile getTile(int x, int y) {
         if (x < 0 || y < 0 || x >= width || y >= height) {
-            Log.e("ERROR","getTile out of bounds: " + x + "/"+y);
+           // Log.e("ERROR","getTile out of bounds: " + x + "/"+y);
             return Tile.grassTile;
         }
 

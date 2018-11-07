@@ -45,11 +45,17 @@ public class Player extends GameObject {
         Bitmap[] image = new Bitmap[numFrames];
         spritesheet = res;
         //this.camera = camera;
-
+/*
         for (int i = 0; i< image.length; i++) {
             image[i] = Bitmap.createBitmap(spritesheet,i*width,0,width,height);
 
             // image[i] = Animation.rotateImage(image[i],45);
+        }*/
+
+        int j = 0;
+        for (int i = image.length-1; i >=0; i--) {
+            image[i] = Bitmap.createBitmap(spritesheet,j*width,0,width,height);
+            j++;
         }
 
         animation.setFrames(image);
@@ -95,26 +101,31 @@ public class Player extends GameObject {
         float differenceX =  (x - directionX);
         float differenceY = (y- directionY);
 
-        Log.d("Diffs",""+differenceX+"/"+differenceY);
+        //Log.d("Diffs",""+differenceX+"/"+differenceY);
         double angle = atan(differenceY/differenceX);
 
-         Log.d("angle","deeg "+angle);
+         //Log.d("angle","deeg "+angle);
 
-         Log.d("angle","rad "+angle);
+         //Log.d("angle","rad "+angle);
 
         int velX = (int) (50 * cos(angle));
         int velY = (int) (50 * sin(angle));
-        Log.d("velocity","velX/velY.  "+velX + "/" + velY);
+        //Log.d("velocity","velX/velY.  "+velX + "/" + velY);
 
         if (differenceX < 0) {
             velX = -1*velX;
             velY = -1*velY;
         }
          angle = Math.toDegrees(angle);
+        //int playerAdditionX = 0,playerAdditionY = 0;
         if (differenceX < 0) {
             angle += 180;
+            //playerAdditionX = 40;
         }
-        Missile newMissile = new Missile(camera,missileBM,x,y,45,15,1,13,(float)angle);
+        if (differenceY < 0) {
+            //playerAdditionY = 64;
+        }
+        Missile newMissile = new Missile(camera,missileBM,x+16,y+16,45,15,1,13,(float)angle);
         newMissile.setVelocity(-velX/2,-velY/2);
 
         return newMissile;
@@ -155,6 +166,23 @@ public class Player extends GameObject {
         Shotgun newShot = new Shotgun(x,y,4,velX,velY);
 
         return newShot;
+    }
+
+    public void keepDirection(float rawX,float rawY) {
+        int directionX = (int ) rawX +camera.getxOffset() ;
+        int directionY = (int) rawY + camera.getyOffset() ;
+        // Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
+        int differenceX = - (x - directionX);
+        int differenceY = - (y - directionY);
+
+        if (differenceX < 0) {
+                dx--;
+            } else {
+                dx++;
+        }
+
+
+
     }
 
     public void setDirection(float rawX,float rawY) {
@@ -202,7 +230,8 @@ public class Player extends GameObject {
 
         //Log.d("PLAYER UPDATE","jump: " + jumping + "   x/y: "+x+"/"+y+"  dx/dy: " +dx + "/" + dy);
 
-        if (!moving) {
+        if (!moving && !parachute) {
+
              dx = dx *  11 / 12;
             // dx = dx / 2;
         }

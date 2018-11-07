@@ -2,6 +2,7 @@ package fin.laakso.burlybugs;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.util.Log;
 
 import java.util.Random;
@@ -18,6 +19,9 @@ public class Missile extends GameObject {
     private int velocityY;
 
     private GameCamera camera;
+
+    // Maybe use this to blow up a missile after certain time
+    private int activationTime;
 
     public Missile(GameCamera camera,Bitmap res,int x, int y, int w, int h, int s, int numFrames, float angle) {
 
@@ -46,12 +50,23 @@ public class Missile extends GameObject {
         this.camera = camera;
         animation.setFrames(image);
         animation.setDelay(100-speed);
+
+        activationTime = 2;
+    }
+
+    public boolean isActivated() {
+        if (activationTime < 0) {
+            return true;
+        }
+        return false;
     }
 
     public void update() {
        //  x -= speed;
 
-        Log.d("MISSILE X/y",""+ x +"/" + y);
+        activationTime--;
+
+       // Log.d("MISSILE X/y",""+ x +"/" + y);
         x += velocityX;
         y += velocityY;
 
@@ -64,8 +79,8 @@ public class Missile extends GameObject {
     }
 
     public void setVelocity(int velX, int velY) {
-        velocityX = velX;
-        velocityY = velY;
+        velocityX = velX*2;
+        velocityY = velY*2;
     }
 
     public void draw(Canvas canvas) {
@@ -83,6 +98,11 @@ public class Missile extends GameObject {
     public int getWidth() {
         // offset slightly for more realistic collision detection
         return width - 10;
+    }
+
+    @Override
+    public Rect getRectangle() {
+        return new Rect(x+5,y+5,x+10,y+20);
     }
 
 

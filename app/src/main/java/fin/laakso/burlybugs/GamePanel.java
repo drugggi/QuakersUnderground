@@ -129,28 +129,36 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
          bg.setVector(newDX,newDY);*/
 
+
+
 /*
 
         int eventNumber = event.getAction();
         long downTime = event.getDownTime();
-        float rawX = event.getRawX();
-        float rawY = event.getRawY();
+        float rawXX = event.getRawX();
+        float rawYY = event.getRawY();
         float precision = event.getXPrecision();
 
 
         Log.d("eventNumber",""+eventNumber);
         Log.d("downtime","" + downTime);
-        Log.d("raw X/Y",rawX+ "/"+rawY);
+        Log.d("raw X/Y",rawXX+ "/"+rawYY);
         Log.d("precision",""+precision);
 
         Log.d("Event","onTouchEvent Method");
-
 */
+
+
+        // MOTIONEVENT IS TACKING FINGERMOTION EVENTWHOU ACTION DOWN OR UP IS NOT CALLED
+        // CONSIDER UPDATING FINGER POSITION TO PLAYER SET DIRECTION
 
        //  Log.d("HEIGHT/WIDTH", getHeight()+"/" + getWidth());
         float rawX = event.getRawX() *  WIDTH / getWidth();
         float rawY = event.getRawY() * HEIGHT / getHeight();
 
+        if (player.isJumping() ) {
+            player.keepDirection(rawX,rawY);
+        }
         switch (event.getAction() ) {
             case MotionEvent.ACTION_DOWN:
 
@@ -356,6 +364,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 int tileX = misX/Tile.TILE_WIDTH;
                 int tileY = misY/Tile.TILE_HEIGHT;
 
+                if (missiles.get(i).isActivated() && collision(missiles.get(i),player) ) {
+                    Log.e("WE HAVE A HIT","PLAUER YES");
+                    player.setX(100);
+                    player.setY(100);
+                }
+                if (missiles.get(i).isActivated() && collision(missiles.get(i),enemy)) {
+                    Log.e("WE HAVE A HIT","ENEMY YES");
+                    enemy.setX(100);
+                    enemy.setY(100);
+                }
 
                 Tile missileTile = world.getTile(tileX,tileY);
                 // Log.d("Tile", x+"/"+y+"  solid: " + missileTile.isSolid() + "  " + missileTile.toString());
@@ -368,10 +386,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                         }
                     }
 
-
-
-
                     missiles.remove(i);
+                    continue;
                 }
                 // Log.d("Tile",""+ pointedTile.toString() );
 

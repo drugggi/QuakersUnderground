@@ -7,9 +7,10 @@ import android.graphics.Rect;
 
 public class WeaponPanel extends GameObject {
 
-    Rect wp;
-    Paint paint;
-
+    Rect weapons;
+    Rect items;
+    Paint weaponsPaint;
+    Paint itemsPaint;
    // private GameCamera camera;
 
     public WeaponPanel() {
@@ -17,11 +18,17 @@ public class WeaponPanel extends GameObject {
         // this.velocityX = -velocityX;
         //this.velocityY = -velocityY;
 
-        wp = new Rect(0,GamePanel.HEIGHT-150,150,GamePanel.HEIGHT);
-        paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setAlpha(50);
+        weapons = new Rect(0,0,100,GamePanel.HEIGHT-150);
+        items = new Rect(0,GamePanel.HEIGHT-150,150,GamePanel.HEIGHT);
+        itemsPaint = new Paint();
+        itemsPaint.setColor(Color.RED);
+        itemsPaint.setStyle(Paint.Style.FILL);
+        itemsPaint.setAlpha(50);
+
+        weaponsPaint = new Paint();
+        weaponsPaint.setColor(Color.GRAY);
+        weaponsPaint.setStyle(Paint.Style.FILL);
+        weaponsPaint.setAlpha(100);
         //super.x = x;
         //super.y = y;
         //this.camera = camera;
@@ -31,9 +38,12 @@ public class WeaponPanel extends GameObject {
 
     }
 
-    public void draw(Canvas canvas) {
-        canvas.drawRect(wp, paint);
+    public void draw(Canvas canvas)
+    {
+        canvas.drawRect(items,itemsPaint);
+        canvas.drawRect(weapons, weaponsPaint);
     }
+
 
 
 }
