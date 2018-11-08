@@ -34,7 +34,7 @@ public class Player extends GameObject {
     public Player(Bitmap res, int w, int h, int numFrames) {
         updateAmount = 0;
 
-        super.x = 600;
+        super.x = 1000;
         super.y = GamePanel.HEIGHT/2;
         // super.dy = 0;
         super.height = h;
@@ -314,6 +314,11 @@ public class Player extends GameObject {
 
         if (dx == 0) {
             moving = false;
+            animation.startAnimation(false);
+            animation.setFrames(4);
+        }
+        else{
+            animation.startAnimation(true);
         }
 
         //Collision detection

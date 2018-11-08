@@ -12,13 +12,15 @@ public class Animation {
     private long delay;
     private boolean playedOnce;
     private boolean knockBackApplied;
+    private boolean startAnimation;
 
     public void setFrames(Bitmap[] frames) {
 
         this.frames = frames;
         currentFrame = 0;
         startTime = System.nanoTime();
-        knockBackApplied = false;
+        // knockBackApplied = false;
+        startAnimation = true;
     }
 
     public void setDelay(long d) {
@@ -30,17 +32,23 @@ public class Animation {
 
     public void update() {
 
-        long elapsed = (System.nanoTime() - startTime)/1000000L;
+        if (startAnimation) {
+            long elapsed = (System.nanoTime() - startTime) / 1000000L;
 
-        if ( elapsed > delay) {
-            currentFrame++;
-            startTime = System.nanoTime();
-        }
+            if (elapsed > delay) {
+                currentFrame++;
+                startTime = System.nanoTime();
+            }
 
-        if(currentFrame == frames.length) {
-            currentFrame = 0;
-            playedOnce= true;
+         if (currentFrame == frames.length) {
+             currentFrame = 0;
+            playedOnce = true;
+            }
         }
+    }
+
+    public void startAnimation(boolean sa) {
+        startAnimation = sa;
     }
 
     public Bitmap getImage() {
@@ -52,12 +60,16 @@ public class Animation {
     public boolean playedOnce() {
         return playedOnce;
     }
+
+/*
+
     public boolean isKnockBackApplied() {
         return knockBackApplied;
     }
     public void setKnowckBack(boolean kb) {
         knockBackApplied = kb;
     }
+*/
 
     public static Bitmap rotateImage(Bitmap src, float degree)
     {

@@ -33,7 +33,7 @@ public class Enemy extends GameObject {
 
     public Enemy(Bitmap res, int w, int h, int numFrames) {
 
-        super.x = 700;
+        super.x = 1200;
         super.y = GamePanel.HEIGHT/3;
         // super.dy = 0;
         super.height = h;
@@ -155,7 +155,7 @@ public class Enemy extends GameObject {
                 health -= differenceY;
         }
         if (health <= 0) {
-            x = 100;
+            x = 1200;
             y = 100;
             health = 300;
         }
