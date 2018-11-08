@@ -40,6 +40,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private ArrayList<GameItem> items;
 
     private ArrayList<Missile> missiles;
+    private ArrayList<Weapon> weapons;
+
     private long missileStartTime;
 
     private SpriteSheet testSheet;
@@ -50,7 +52,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     private GameCamera camera;
 
-    private WeaponPanel weapons;
+    private WeaponPanel weaponPanel;
 
     public GamePanel(Context context) {
         super(context);
@@ -99,7 +101,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         enemy.setWorldObject(world);
 
         Bitmap wp = BitmapFactory.decodeResource(getResources(),R.drawable.weaponpanel);
-        weapons = new WeaponPanel(wp);
+        weaponPanel = new WeaponPanel(wp);
     }
 
     @Override
@@ -213,7 +215,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
 
                 if (rawX < 100 && rawY <= GamePanel.HEIGHT-150) {
-                    weapons.setSelectedItem(rawX,rawY);
+                    weaponPanel.setSelectedItem(rawX,rawY);
+                    weaponPanel.update();
                     return true;
                 }
 
@@ -381,7 +384,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 */
                 enemy.setShootingTime(false);
             }
-            weapons.update();
             //add missiles on timer
   /*
     long missileElapsed = (System.nanoTime() - missileStartTime)/1000000;
@@ -584,7 +586,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             world.draw(canvas);
             player.draw(canvas);
             enemy.draw(canvas);
-            weapons.draw(canvas);
+            weaponPanel.draw(canvas);
 
 
             // Bitmap testCrop = testSheet.crop(64,64,32,32);

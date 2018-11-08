@@ -7,7 +7,7 @@ import android.util.Log;
 
 import java.util.Random;
 
-public class Missile extends GameObject {
+public class Missile extends Weapon {
 
     private int score;
     private int speed;
@@ -15,8 +15,8 @@ public class Missile extends GameObject {
     private Animation animation = new Animation();
     private Bitmap spritesheet;
 
-    private int velocityX;
-    private int velocityY;
+    //private int velocityX;
+    //private int velocityY;
 
     private GameCamera camera;
 
@@ -79,8 +79,8 @@ public class Missile extends GameObject {
     }
 
     public void setVelocity(int velX, int velY) {
-        velocityX = velX*2;
-        velocityY = velY*2;
+        super.velocityX = velX*2;
+        super.velocityY = velY*2;
     }
 
     public void draw(Canvas canvas) {

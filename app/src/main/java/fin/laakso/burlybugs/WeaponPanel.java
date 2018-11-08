@@ -51,7 +51,8 @@ public class WeaponPanel extends GameObject {
     }
 
     public void update() {
-
+        // selectedItem = new Rect(0,selectedItemPosition*95,100,selectedItemPosition*95+95);
+        selectedItem.set(0,selectedItemPosition*95,100,selectedItemPosition*95+95);
     }
 
     public void setSelectedItem(float positionX,float positionY) {

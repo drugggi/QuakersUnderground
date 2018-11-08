@@ -4,16 +4,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-public class Shotgun extends GameObject {
+public class Shotgun extends Weapon {
 
     public int radius;
-    private int velocityX;
-    private int velocityY;
+    //private int velocityX;
+    //private int velocityY;
 
     public Shotgun(int x, int y, int r, int velocityX, int velocityY) {
         this.radius= r;
-        this.velocityX = -velocityX;
-        this.velocityY = -velocityY;
+        super.velocityX = -velocityX;
+        super.velocityY = -velocityY;
         super.x = x;
         super.y = y;
     }

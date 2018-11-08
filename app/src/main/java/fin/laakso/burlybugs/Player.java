@@ -13,13 +13,13 @@ import static java.lang.Math.sin;
 import static java.lang.Math.tan;
 import static java.lang.Math.tanh;
 
-public class Player extends GameObject {
+public class Player extends Entity {
     private Bitmap spritesheet;
     private int score;
     // private double dya;
     private boolean moving;
     private boolean playing;
-    private boolean jumping;
+    // private boolean jumping;
     private Animation animation = new Animation();
     private long startTime;
     private boolean parachute;
@@ -216,7 +216,7 @@ public class Player extends GameObject {
 
 
     }
-
+/*
     public void setKnockBack(int knockX, int knockY) {
 
         int differenceX = getCenterX() - knockX;
@@ -243,7 +243,15 @@ public class Player extends GameObject {
             jumping = true;
         }
 
-    }
+        if (health <= 0) {
+            x = 1200;
+            y = 100;
+            super.health = 300;
+        }
+
+        Log.d("Health","HEALTH: " + health);
+
+    }*/
 
     public void update() {
         updateAmount++;

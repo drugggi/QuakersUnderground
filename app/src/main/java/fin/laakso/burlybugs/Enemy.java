@@ -12,13 +12,13 @@ import static java.lang.Math.atan;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-public class Enemy extends GameObject {
+public class Enemy extends Entity {
 
     private Bitmap spritesheet;
 
     private boolean moving;
     private boolean playing;
-    private boolean jumping;
+    // private boolean jumping;
     private Animation animation = new Animation();
     private long startTime;
     private boolean parachute;
@@ -33,7 +33,6 @@ public class Enemy extends GameObject {
     Random rng;
     private int nextDecision;
 
-    int health ;
 
     public Enemy(Bitmap res, int w, int h, int numFrames) {
 
@@ -50,8 +49,6 @@ public class Enemy extends GameObject {
         spritesheet = res;
         //this.camera = camera;
 
-
-        health = 300;
 
         int j = 0;
         for (int i = image.length-1; i >=0; i--) {
@@ -167,6 +164,7 @@ public class Enemy extends GameObject {
                 getResources(),R.drawable.missile), WIDTH + 10, HEIGHT/2,45,15,player.getScore(),13));
         */
     }
+/*
 
     public void setKnockBack(int knockX, int knockY) {
 
@@ -204,16 +202,18 @@ public class Enemy extends GameObject {
                 jumping = true;
                 health -= differenceY;
         }
+
         if (health <= 0) {
-            x = 1200;
+            x = rng.nextInt(1200)+100;
             y = 100;
-            health = 300;
+            super.health = 300;
         }
 
         Log.d("Health","HEALTH: " + health);
 
 
     }
+*/
 
     public void update() {
         animation.update();
