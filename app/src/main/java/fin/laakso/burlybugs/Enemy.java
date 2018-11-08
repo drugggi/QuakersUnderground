@@ -8,6 +8,10 @@ import android.util.Log;
 
 import java.util.Random;
 
+import static java.lang.Math.atan;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 public class Enemy extends GameObject {
 
     private Bitmap spritesheet;
@@ -116,6 +120,52 @@ public class Enemy extends GameObject {
 
 
 
+    }
+
+    public Missile addMissile(float playerX, float playerY, Bitmap missileBM) {
+
+
+        int directionX = (int ) playerX;// +camera.getxOffset() ;
+        int directionY = (int) playerY;//+ camera.getyOffset() ;
+        //Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
+        float differenceX =  (x - directionX);
+        float differenceY = (y- directionY);
+
+        //Log.d("Diffs",""+differenceX+"/"+differenceY);
+        double angle = atan(differenceY/differenceX);
+        angle = rng.nextGaussian()*0.5+angle;
+
+        //Log.d("angle","deeg "+angle);
+
+        //Log.d("angle","rad "+angle);
+
+        int velX = (int) (50 * cos(angle));
+        int velY = (int) (50 * sin(angle));
+        //Log.d("velocity","velX/velY.  "+velX + "/" + velY);
+
+        if (differenceX < 0) {
+            velX = -1*velX;
+            velY = -1*velY;
+        }
+        angle = Math.toDegrees(angle);
+
+
+        //int playerAdditionX = 0,playerAdditionY = 0;
+        if (differenceX < 0) {
+            angle += 180;
+            //playerAdditionX = 40;
+        }
+        if (differenceY < 0) {
+            //playerAdditionY = 64;
+        }
+        Missile newMissile = new Missile(camera,missileBM,x+16,y+16,45,15,1,13,(float)angle);
+        newMissile.setVelocity(-velX/2,-velY/2);
+
+        return newMissile;
+/*
+        missiles.add(new Missile(BitmapFactory.decodeResource(
+                getResources(),R.drawable.missile), WIDTH + 10, HEIGHT/2,45,15,player.getScore(),13));
+        */
     }
 
     public void setKnockBack(int knockX, int knockY) {

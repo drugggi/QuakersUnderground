@@ -318,6 +318,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             if (enemy.isShootingTime() ) {
                 Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
 
+                missiles.add(enemy.addMissile(player.getX(),player.getY(),missileBM) );
+/*
                 double angle = 2*3.141*rng.nextFloat();
                 int velX = (int) (50 * cos(angle));
                 int velY = (int) (50 * sin(angle));
@@ -325,6 +327,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 Missile enemyMissile = new Missile(camera,missileBM,enemy.getX(),enemy.getY(),45,15,1,13,(float)angle);
                 enemyMissile.setVelocity(-velX/2,-velY/2);
                 missiles.add(enemyMissile);
+                */
                 enemy.setShootingTime(false);
             }
             weapons.update();
