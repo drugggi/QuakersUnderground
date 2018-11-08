@@ -97,7 +97,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         world = new World(camera,"");
         player.setWorldObject(world);
         enemy.setWorldObject(world);
-        weapons = new WeaponPanel();
+
+        Bitmap wp = BitmapFactory.decodeResource(getResources(),R.drawable.weaponpanel);
+        weapons = new WeaponPanel(wp);
     }
 
     @Override
@@ -133,9 +135,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
          bg.setVector(newDX,newDY);*/
 
-
-
 /*
+
+        int index = event.getActionIndex();
+        int pointerId = event.getPointerId(index);
+        int action = event.getActionMasked();
+
 
         int eventNumber = event.getAction();
         long downTime = event.getDownTime();
@@ -148,8 +153,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         Log.d("downtime","" + downTime);
         Log.d("raw X/Y",rawXX+ "/"+rawYY);
         Log.d("precision",""+precision);
+        Log.d("index",""+index);
+        Log.d("pointerID",""+pointerId);
+        Log.d("action",""+action);
 
         Log.d("Event","onTouchEvent Method");
+
 */
 
 
@@ -157,14 +166,56 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         // CONSIDER UPDATING FINGER POSITION TO PLAYER SET DIRECTION
 
        //  Log.d("HEIGHT/WIDTH", getHeight()+"/" + getWidth());
+        int rawIndex = event.getActionIndex();
         float rawX = event.getRawX() *  WIDTH / getWidth();
         float rawY = event.getRawY() * HEIGHT / getHeight();
 
         if (player.isJumping() && !player.isParachute()) {
             player.keepDirection(rawX,rawY);
         }
-        switch (event.getAction() ) {
+
+        // event.getPointerId()
+        switch (event.getActionMasked() ) {
+/*
+
+            case MotionEvent.ACTION_POINTER_INDEX_MASK:
+                Log.d("LOL,","ACTION_POINTER_INDEX_MASK");
+                return true;
+            case MotionEvent.ACTION_POINTER_INDEX_SHIFT:
+                Log.d("LOL,","ACTION_POINTER_INDEX_SHIFT");
+                return true;
+
+*/
+
+
+            case MotionEvent.ACTION_POINTER_DOWN:
+                //Log.d("YES,","YES SECOND POINTER DOWN");
+
+                long missileElapsed2 = (System.nanoTime() - missileStartTime)/1000000;
+
+                if (missileElapsed2 > (500)) {
+
+                    rawX = event.getX(rawIndex);
+                    rawY = event.getY(rawIndex);
+                    Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
+                    missiles.add(player.addMissile(rawX,rawY,missileBM)) ;
+                    missileStartTime = System.nanoTime();
+                }
+                return true;
+
+            case MotionEvent.ACTION_POINTER_UP:
+                //Log.d("YES,","YES SECOND POINTER UP");
+              //  Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
+               // missiles.add(player.addMissile(rawX,rawY,missileBM)) ;
+                return true;
+
             case MotionEvent.ACTION_DOWN:
+
+
+                if (rawX < 100 && rawY <= GamePanel.HEIGHT-150) {
+                    weapons.setSelectedItem(rawX,rawY);
+                    return true;
+                }
 
                 if (rawX < 150 && rawY > GamePanel.HEIGHT-150 ) {
 
