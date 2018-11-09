@@ -9,13 +9,13 @@ import android.util.Log;
 
 public class WeaponPanel extends GameObject {
 
-    Rect weaponsBackground;
-    Rect items;
-    Rect selectedItem;
-    Paint weaponsPaint;
-    Paint itemsPaint;
-    Paint selectedItemPaint;
-    int selectedItemPosition;
+    private Rect weaponsBackground;
+    private Rect items;
+    private Rect selectedItem;
+    private Paint weaponsPaint;
+    private Paint itemsPaint;
+    private Paint selectedItemPaint;
+    private int selectedItemPosition;
 
     Bitmap weapons;
    // private GameCamera camera;

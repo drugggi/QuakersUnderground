@@ -7,6 +7,9 @@ import android.util.Log;
 
 import java.util.Random;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 public class Missile extends Weapon {
 
     private int score;
@@ -52,8 +55,13 @@ public class Missile extends Weapon {
         animation.setDelay(100-speed);
 
         activationTime = 2;
+
+        // velocityX = (int) (50 * cos(angle));
+        // velocityY = (int) (50 * sin(angle));
+
     }
 
+    @Override
     public boolean isActivated() {
         if (activationTime < 0) {
             return true;
@@ -66,7 +74,7 @@ public class Missile extends Weapon {
 
         activationTime--;
 
-       // Log.d("MISSILE X/y",""+ x +"/" + y);
+       Log.d("VELS X/y",""+ velocityX +"/" + velocityY);
         x += velocityX;
         y += velocityY;
 

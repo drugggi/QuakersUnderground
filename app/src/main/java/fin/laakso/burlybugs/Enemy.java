@@ -26,7 +26,7 @@ public class Enemy extends Entity {
     private boolean shootingTime;
 
     private GameCamera camera;
-    private World gameWorld;
+    // private World gameWorld;
     private long missileStartTime;
 
     private int updateAmount;
@@ -82,7 +82,6 @@ public class Enemy extends Entity {
     }
 
     public void setDirection(int differenceX,int differenceY) {
-
 
             if (rng.nextBoolean() ) {
                 dx = differenceX / 20;

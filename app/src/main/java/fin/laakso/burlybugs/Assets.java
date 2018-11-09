@@ -1,6 +1,8 @@
 package fin.laakso.burlybugs;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import static fin.laakso.burlybugs.Tile.TILE_HEIGHT;
 import static fin.laakso.burlybugs.Tile.TILE_WIDTH;
@@ -10,7 +12,10 @@ public class Assets {
     //public static final int TILE_WIDTH = 32,TILE_HEIGHT = 32;
     public static Bitmap stone,dirt, grass, sand, wind, empty, sky, tree, cloud, plant;
 
-    public static void init(Bitmap spritesheet) {
+    public static Bitmap missile;
+    public static Bitmap redarmor;
+
+    public static void init(Bitmap spritesheet,Resources res) {
         SpriteSheet testSheet = new SpriteSheet( spritesheet);
 
         stone = testSheet.crop(0,0,TILE_WIDTH,TILE_HEIGHT);
@@ -23,6 +28,9 @@ public class Assets {
         tree = testSheet.crop(3*TILE_WIDTH,TILE_HEIGHT,TILE_WIDTH,TILE_HEIGHT);
         cloud = testSheet.crop(0,2*TILE_HEIGHT,TILE_WIDTH,TILE_HEIGHT);
         plant = testSheet.crop(TILE_WIDTH,2*TILE_HEIGHT,TILE_WIDTH,TILE_HEIGHT);
+
+        missile = BitmapFactory.decodeResource(res,R.drawable.missile);
+        redarmor = BitmapFactory.decodeResource(res,R.drawable.redarmor);
 
     }
 }

@@ -7,16 +7,11 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import static java.lang.Math.atan;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -37,10 +32,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     private ArrayList<Shotgun> shotgunShots;
     private ArrayList<WeaponEffect> weaponEffects;
-    private ArrayList<GameItem> items;
+    private ArrayList<Item> items;
 
     private ArrayList<Missile> missiles;
     private ArrayList<Weapon> weapons;
+    private ArrayList<Entity> players;
 
     private long missileStartTime;
 
@@ -74,6 +70,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
          enemy = new Enemy(BitmapFactory.decodeResource(getResources(),R.drawable.heroart),64,64,6);
          weaponEffects = new ArrayList<>();
          items = new ArrayList<>();
+         weapons = new ArrayList<>();
+         players = new ArrayList<>();
 
         testSheet = new SpriteSheet(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest));
         //   bg.setVector(0,-1);
@@ -82,7 +80,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         missiles = new ArrayList<Missile>();
 
         //Assets gameAssets = new Assets(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest))
-        Assets.init(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest));
+        Assets.init(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest),getResources() );
         camera = new GameCamera(player,0,0);
         player.setCamera(camera);
 
@@ -102,6 +100,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         Bitmap wp = BitmapFactory.decodeResource(getResources(),R.drawable.weaponpanel);
         weaponPanel = new WeaponPanel(wp);
+        players.add(enemy);
+        players.add(player);
     }
 
     @Override
@@ -221,7 +221,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 }
 
                 if (rawX < 150 && rawY > GamePanel.HEIGHT-150 ) {
-
+                    items.add(new Item(world,0,0,150));
                     if (player.isJumping() ) {
 
                         if (player.isParachute()) {
@@ -233,7 +233,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     }
                     else {
                         if (player.isAnchor() ) {
-                            items.add(new GameItem(world,0,0,150));
                             player.setAnchor(false);
                         }
                         else {
@@ -246,22 +245,26 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 else {
                     if (player.isJumping() ) {
 
+                        player.shoot(weapons,(int)rawX,(int)rawY);
+/*
                         long missileElapsed = (System.nanoTime() - missileStartTime)/1000000;
 
                         if (missileElapsed > (500)) {
                             Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
                             missiles.add(player.addMissile(rawX,rawY,missileBM)) ;
                             missileStartTime = System.nanoTime();
-                        }
+                        }*/
                     }
                     else if (player.isAnchor() ) {
-                        long missileElapsed = (System.nanoTime() - missileStartTime)/1000000;
+
+                        player.shoot(weapons,(int)rawX,(int)rawY);
+      /*                  long missileElapsed = (System.nanoTime() - missileStartTime)/1000000;
 
                         if (missileElapsed > (500)) {
                             Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
                             missiles.add(player.addMissile(rawX,rawY,missileBM)) ;
                             missileStartTime = System.nanoTime();
-                        }
+                        }*/
                     }
                     else {
                         player.setDirection(rawX,rawY);
@@ -349,88 +352,112 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         if (player.isPlaying() ) {
 
-            //camera.move(1,0);
             camera.centerOnGameObject();
             bg.update();
             world.update();
             player.update();
             enemy.update();
 
-            for (int i = 0 ; i < items.size() ; i++) {
-                items.get(i).update();
-                if (collision(items.get(i),player)) {
-                    items.remove(i);
-                    continue;
+            for (Entity ent: players) {
+                for (int i = 0 ; i < items.size() ; i++) {
+                    if (collision(items.get(i),ent) ) {
+                        items.remove(i);
+                        // entity.giveItem(items.get(i) );
+                        continue;
+                    }
+                    items.get(i).update();
                 }
-                if (collision(items.get(i),enemy)) {
-                    items.remove(i);
+            }
+
+            for (Entity ent: players) {
+                for (int i = 0 ; i < weapons.size() ; i++) {
+
+                    int misX = weapons.get(i).getX();
+                    int misY = weapons.get(i).getY();
+
+                    int tileX = misX/Tile.TILE_WIDTH;
+                    int tileY = misY/Tile.TILE_HEIGHT;
+                    Tile missileTile = world.getTile(tileX,tileY);
+
+                    if (missileTile.isSolid() ) {
+                        Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
+                        weaponEffects.add(new WeaponEffect(camera,explosion,misX,misY,100,100,25));
+
+                        for (int yy = -1 ; yy < 2 ; yy++) {
+                            for (int xx = -1 ; xx < 2 ; xx++) {
+                                world.setTile(tileX+xx,tileY+yy,0);
+                            }
+                        }
+                        weapons.remove(i);
+                        continue;
+                    }
+
+                    // If it is Entityts own shot we dont check collision
+                    if (weapons.get(i).whoShot() == ent) {
+                        Log.d("ENTITYS","OWN SHOT");
+                    }
+                    if (weapons.get(i).whoShot() != ent && collision(weapons.get(i), ent)) {
+
+                        Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
+                        weaponEffects.add(new WeaponEffect(camera,explosion,misX,misY,100,100,25));
+
+                        weapons.remove(i);
+                        continue;
+                    }
+
+                    if (misX < 0 || misX > world.getWorldWidth() ||
+                            misY < 0 || misY > world.getWorldHeight() ) {
+                        weapons.remove(i);
+                        continue;
+                    }
+
+                    weapons.get(i).update();
 
                 }
             }
 
 
-            if (enemy.isShootingTime() ) {
-                Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
 
-                missiles.add(enemy.addMissile(player.getX(),player.getY(),missileBM) );
 /*
-                double angle = 2*3.141*rng.nextFloat();
-                int velX = (int) (50 * cos(angle));
-                int velY = (int) (50 * sin(angle));
 
-                Missile enemyMissile = new Missile(camera,missileBM,enemy.getX(),enemy.getY(),45,15,1,13,(float)angle);
-                enemyMissile.setVelocity(-velX/2,-velY/2);
-                missiles.add(enemyMissile);
-                */
+            for(Weapon shot:weapons) {
+                shot.update();
+            }
+*/
+
+/*            if (enemy.isShootingTime() ) {
+
+                Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
+                missiles.add(enemy.addMissile(player.getX(),player.getY(),missileBM) );
                 enemy.setShootingTime(false);
-            }
-            //add missiles on timer
-  /*
-    long missileElapsed = (System.nanoTime() - missileStartTime)/1000000;
-            if (missileElapsed > (2000-player.getScore()/4)) {
 
-                //first missile always goes down the middle
-                if (missiles.size() == 0) {
-                    missiles.add(new Missile(BitmapFactory.decodeResource(
-                            getResources(),R.drawable.missile), WIDTH + 10, HEIGHT/2,45,15,player.getScore(),13));
-                }
-                else {
-                    missiles.add(new Missile(BitmapFactory.decodeResource(
-                            getResources(),R.drawable.missile), WIDTH + 10,
-                            rng.nextInt(HEIGHT),45,15,player.getScore(),13));
-                }
+            }*/
 
-                missileStartTime = System.nanoTime();
-            }
+/*
 
-            for (int i = 0; i < missiles.size() ; i++) {
 
-                missiles.get(i).update();
+            for (int i = 0 ; i < weapons.size() ; i++) {
+                weapons.get(i).update();
 
-                if (collision(missiles.get(i),player)) {
-                    missiles.remove(i);
-                    player.setPlaying(false);
-                    break;
-                }
+                int misX = weapons.get(i).getX();
+                int misY = weapons.get(i).getY();
 
-                if (missiles.get(i).getX() <- 100) {
-                    missiles.remove(i);
-                    continue;
-                }
+                if (weapons.get(i).isActivated() ) {
+                    for (Entity ent: players) {
 
-                for (Shotgun sg: shotgunShots) {
-                    if (collision(sg,missiles.get(i))) {
-                        missiles.remove(i);
-                        break;
+                        if (collision(weapons.get(i),ent) ) {
+                            Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
+                            weaponEffects.add(new WeaponEffect(camera,explosion,misX,misY,100,100,25));
+
+                            // We have to remove weapon ja apply damaga etc
+                            continue;
+                        }
                     }
                 }
-
-
-
             }
-
 */
-            for (int i = 0 ; i < missiles.size() ; i++) {
+
+       /*     for (int i = 0 ; i < missiles.size() ; i++) {
                 missiles.get(i).update();
 
                 // Log.d("missiles","size: " +missiles.size() );
@@ -489,8 +516,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     missiles.remove(i);
                 }
             }
-
+*/
             // add smoke puffs if moving and timer
+
+
+
+            // Some puff stuff feel free to remove
             long elapsed = (System.nanoTime() - puffStartTime)/1000000;
             if (elapsed > 120  ) {
 
@@ -506,10 +537,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     }
                 }
             }
+
             for (int i = 0; i < puffs.size() ; i++) {
                 puffs.get(i).update();
 
             }
+/*
             for (int i = 0; i< shotgunShots.size() ; i++) {
                 int tempX = shotgunShots.get(i).getX();
                 int tempY = shotgunShots.get(i).getY();
@@ -519,12 +552,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             }
             for (Shotgun shot: shotgunShots) {
                 shot.update();
-            }
+            }*/
            // Log.d("weap size",""+weaponEffects.size());
+
+
+
+
             for (int i = 0; i < weaponEffects.size() ; i++) {
                 weaponEffects.get(i).update();
-
-               //Log.d("weap size",""+weaponEffects.size());
 
                 if (weaponEffects.get(i).finished() ) {
                     weaponEffects.remove(i);
@@ -533,7 +568,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
                 if (!weaponEffects.get(i).isKnockBackApplied() ) {
 
-                    if (collision(weaponEffects.get(i),enemy)) {
+     /*               if (collision(weaponEffects.get(i),enemy)) {
                  //       Log.d("kertakerta","taas kerta");
                         int misX = weaponEffects.get(i).getCenterX();
                         int misY = weaponEffects.get(i).getCenterY();
@@ -546,6 +581,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                         int misY = weaponEffects.get(i).getCenterY();
                         player.setKnockBack(misX, misY);
 
+                    }*/
+
+                    for (Entity ent: players) {
+                        if (collision(weaponEffects.get(i),ent)) {
+                            //   Log.d("kertakerta","taas kerta");
+                            int misX = weaponEffects.get(i).getCenterX();
+                            int misY = weaponEffects.get(i).getCenterY();
+                            ent.setKnockBack(misX, misY);
+
+                        }
                     }
 
                     weaponEffects.get(i).setKnockBackApplied(true);
@@ -605,10 +650,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 m.draw(canvas);
             }
 
+            for (Weapon wp: weapons) {
+                wp.draw(canvas);
+                Log.d("weapons","SIZE: " + weapons.size());
+            }
             for (WeaponEffect effect: weaponEffects) {
                 effect.draw(canvas);
             }
-            for (GameItem item: items) {
+            for (Item item: items) {
                 item.draw(canvas);
             }
 

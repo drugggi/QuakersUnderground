@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.os.SystemClock;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import static java.lang.Math.abs;
 import static java.lang.Math.atan;
 import static java.lang.Math.cos;
@@ -27,9 +29,10 @@ public class Player extends Entity {
 
     private GameCamera camera;
 
-    private World gameWorld;
+    // private World gameWorld;
 
     private int updateAmount;
+    private WeaponPanel weaponPanel;
 
     public Player(Bitmap res, int w, int h, int numFrames) {
         updateAmount = 0;
@@ -61,6 +64,8 @@ public class Player extends Entity {
         animation.setFrames(image);
         animation.setDelay(100);
         startTime = System.nanoTime();
+
+        super.backpack.setBackpackAmmo(new int[] {25,4});
 
     }
 
@@ -134,7 +139,52 @@ public class Player extends Entity {
                 getResources(),R.drawable.missile), WIDTH + 10, HEIGHT/2,45,15,player.getScore(),13));
         */
     }
+    @Override
+    public void shoot(ArrayList<Weapon> shootingWeapons, int towardsX, int towradsY) {
 
+        long missileElapsed2 = (System.nanoTime() - backpack.getShotStartTime() )/1000000;
+        if (missileElapsed2 < 500) {return; }
+
+
+        towardsX = towardsX+camera.getxOffset() ;
+        towradsY = towradsY+ camera.getyOffset() ;
+        //Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
+        float differenceX =  (x - towardsX);
+        float differenceY = (y- towradsY);
+
+        //Log.d("Diffs",""+differenceX+"/"+differenceY);
+        double angle = atan(differenceY/differenceX);
+
+        //Log.d("angle","deeg "+angle);
+
+        //Log.d("angle","rad "+angle);
+
+        int velX = (int) (50 * cos(angle));
+        int velY = (int) (50 * sin(angle));
+        //Log.d("velocity","velX/velY.  "+velX + "/" + velY);
+
+        if (differenceX < 0) {
+            velX = -1*velX;
+            velY = -1*velY;
+        }
+         angle = Math.toDegrees(angle);
+        //int playerAdditionX = 0,playerAdditionY = 0;
+        if (differenceX < 0) {
+            angle += 180;
+            //playerAdditionX = 40;
+        }
+        if (differenceY < 0) {
+            //playerAdditionY = 64;
+        }
+        Missile newMissile = new Missile(camera,Assets.missile,x+16,y+16,45,15,1,13,(float)angle);
+        backpack.setShotStartTime(System.nanoTime() );
+
+         newMissile.setVelocity(-velX/4,-velY/4);
+         newMissile.setEntity(this);
+
+        shootingWeapons.add(newMissile);
+
+    }
     public Shotgun addShot(float rawX, float rawY) {
 
 
