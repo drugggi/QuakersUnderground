@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import static java.lang.Math.atan;
@@ -83,26 +84,24 @@ public class Enemy extends Entity {
 
     public void setDirection(int differenceX,int differenceY) {
 
-            if (rng.nextBoolean() ) {
-                dx = differenceX / 20;
 
-                dy = differenceY / 15;
-                jumping = true;
-                moving = true;
-            }
-            else {
-                shootingTime = true;
-            }
+        if (!jumping) {
+            dy = differenceY / 15;
+            dx = differenceX / 30;
+            jumping = true;
+            moving = true;
+        }
+
       //  Log.d("ENEMY DIRECTION", "diffx/diffy: " + differenceX + "/" + differenceY + "   dx/dy: " + dx + "/" + dy);
 
     }
 
     private void makeIntelligentDecision() {
 
-        if (updateAmount % 30 == 0) {
+       // if (updateAmount % 30 == 0) {
          //   Log.d("ENEMY STATE", "moving:  " + moving + "  jump: " + jumping + "  anch: " + anchor + "  para: " + parachute);
          //   Log.d("ENEMY STATE", "x/y: " + x + "/" + y + "   dx/dy: " + dx + "/" + dy);
-        }
+      //  }
 
         if (updateAmount % nextDecision == 0) {
             nextDecision = 30*rng.nextInt(3)+30;
@@ -114,7 +113,54 @@ public class Enemy extends Entity {
            // moving = true;
         }
 
+    }
 
+    @Override
+    public void shoot(ArrayList<Weapon> shootingWeapons, int towardsX, int towradsY) {
+
+
+
+        long missileElapsed2 = (System.nanoTime() - backpack.getShotStartTime() )/1000000;
+        if (missileElapsed2 < 1000) {return; }
+
+        //towardsX = towardsX + camera.getxOffset() ;
+        //towradsY = towradsY + camera.getyOffset() ;
+        //Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
+        float differenceX = (x - towardsX);
+        float differenceY = (y - towradsY);
+        // Log.d("Diffs",""+differenceX+"/"+differenceY);
+        if (differenceX > 640 || differenceY > 360 || differenceX < -640 ||differenceY < -360) {return; }
+
+        //Log.d("Diffs",""+differenceX+"/"+differenceY);
+        double angle = atan(differenceY/differenceX);
+        angle = rng.nextGaussian()*0.2+angle;
+        //Log.d("angle","deeg "+angle);
+        //Log.d("angle","rad "+angle);
+
+        int velX = (int) (50 * cos(angle));
+        int velY = (int) (50 * sin(angle));
+        //Log.d("velocity","velX/velY.  "+velX + "/" + velY);
+
+        if (differenceX < 0) {
+            velX = -1*velX;
+            velY = -1*velY;
+        }
+        angle = Math.toDegrees(angle);
+        //int playerAdditionX = 0,playerAdditionY = 0;
+        if (differenceX < 0) {
+            angle += 180;
+            //playerAdditionX = 40;
+        }
+        if (differenceY < 0) {
+            //playerAdditionY = 64;
+        }
+        Missile newMissile = new Missile(camera,Assets.missile,x+16,y+16,45,15,1,13,(float)angle);
+        backpack.setShotStartTime(System.nanoTime() );
+
+        newMissile.setVelocity(-velX/4,-velY/4);
+        newMissile.setEntity(this);
+
+        shootingWeapons.add(newMissile);
 
     }
 
@@ -219,7 +265,7 @@ public class Enemy extends Entity {
         updateAmount++;
         makeIntelligentDecision();
 
-        dx = dx *  11 / 12;
+        //dx = dx *  11 / 12;
         x += dx ;
         if (jumping) {
             if (parachute) {

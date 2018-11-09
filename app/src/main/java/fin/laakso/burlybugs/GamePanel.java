@@ -192,7 +192,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
             case MotionEvent.ACTION_POINTER_DOWN:
                 //Log.d("YES,","YES SECOND POINTER DOWN");
-
+                rawX = event.getX(rawIndex);
+                rawY = event.getY(rawIndex);
+                player.shoot(weapons,(int)rawX,(int)rawY);
+/*
                 long missileElapsed2 = (System.nanoTime() - missileStartTime)/1000000;
 
                 if (missileElapsed2 > (500)) {
@@ -202,7 +205,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
                     missiles.add(player.addMissile(rawX,rawY,missileBM)) ;
                     missileStartTime = System.nanoTime();
-                }
+                }*/
                 return true;
 
             case MotionEvent.ACTION_POINTER_UP:
@@ -219,6 +222,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     weaponPanel.update();
                     return true;
                 }
+/*
 
                 if (rawX < 150 && rawY > GamePanel.HEIGHT-150 ) {
                     items.add(new Item(world,0,0,150));
@@ -241,6 +245,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     }
                     return true;
                 }
+*/
 
                 else {
                     if (player.isJumping() ) {
@@ -331,7 +336,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     player.setMoving(false);
                 }
                 else {
-                    Log.e("ARRAY SIZES","mis: " + missiles.size() + "  puff: " + puffs.size() + " sg: " + shotgunShots.size() );
+                 //   Log.e("ARRAY SIZES","mis: " + missiles.size() + "  puff: " + puffs.size() + " sg: " + shotgunShots.size() );
                     player.setPlaying(true);
                 }
 
@@ -357,12 +362,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             world.update();
             player.update();
             enemy.update();
+            enemy.shoot(weapons,player.getX(),player.getY() );
 
             for (Entity ent: players) {
+
                 for (int i = 0 ; i < items.size() ; i++) {
                     if (collision(items.get(i),ent) ) {
+                        ent.giveItem(items.get(i) );
                         items.remove(i);
-                        // entity.giveItem(items.get(i) );
                         continue;
                     }
                     items.get(i).update();
@@ -394,7 +401,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
                     // If it is Entityts own shot we dont check collision
                     if (weapons.get(i).whoShot() == ent) {
-                        Log.d("ENTITYS","OWN SHOT");
+             //           Log.d("ENTITYS","OWN SHOT");
                     }
                     if (weapons.get(i).whoShot() != ent && collision(weapons.get(i), ent)) {
 
@@ -568,36 +575,26 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
                 if (!weaponEffects.get(i).isKnockBackApplied() ) {
 
-     /*               if (collision(weaponEffects.get(i),enemy)) {
-                 //       Log.d("kertakerta","taas kerta");
-                        int misX = weaponEffects.get(i).getCenterX();
-                        int misY = weaponEffects.get(i).getCenterY();
-                        enemy.setKnockBack(misX, misY);
-
-                    }
-                    if (collision(weaponEffects.get(i),player)) {
-                     //   Log.d("kertakerta","taas kerta");
-                        int misX = weaponEffects.get(i).getCenterX();
-                        int misY = weaponEffects.get(i).getCenterY();
-                        player.setKnockBack(misX, misY);
-
-                    }*/
-
                     for (Entity ent: players) {
                         if (collision(weaponEffects.get(i),ent)) {
                             //   Log.d("kertakerta","taas kerta");
                             int misX = weaponEffects.get(i).getCenterX();
                             int misY = weaponEffects.get(i).getCenterY();
                             ent.setKnockBack(misX, misY);
-
                         }
                     }
-
                     weaponEffects.get(i).setKnockBackApplied(true);
                     //  player.setKnockBack(misX,misY);
 
                 }
             }
+
+            if (items.size() == 0 || items.size() < 15 && rng.nextInt(30*30) == 0) {
+                Log.d("SIZES",""+weapons.size() + " " + weaponEffects.size() + " " + items.size() + " " + puffs.size());
+               // Log.d("LUCKY NUMBER","ITEM ADDED");
+                items.add(new Item(world,0,0,150));
+            }
+
 
 /*
             for (WeaponEffect effect: weaponEffects) {
@@ -629,30 +626,30 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
             bg.draw(canvas);
             world.draw(canvas);
-            player.draw(canvas);
-            enemy.draw(canvas);
+           // player.draw(canvas);
+            //enemy.draw(canvas);
             weaponPanel.draw(canvas);
 
-
-            // Bitmap testCrop = testSheet.crop(64,64,32,32);
-            // canvas.drawBitmap(Assets.grass,200,200,null);
-
-            //canvas.drawBitmap(testSheet.getSpritesheet(),10,10,null);
-
+            for (Entity ent: players) {
+                ent.draw(canvas);
+            }
             for (Movepuff mp: puffs) {
 
                 mp.draw(canvas);
             }
+/*
+
             for (Shotgun shot: shotgunShots) {
                 shot.draw(canvas);
             }
             for (Missile m: missiles) {
                 m.draw(canvas);
             }
+*/
 
             for (Weapon wp: weapons) {
                 wp.draw(canvas);
-                Log.d("weapons","SIZE: " + weapons.size());
+               // Log.d("weapons","SIZE: " + weapons.size());
             }
             for (WeaponEffect effect: weaponEffects) {
                 effect.draw(canvas);

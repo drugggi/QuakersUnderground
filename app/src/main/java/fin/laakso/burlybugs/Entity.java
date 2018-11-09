@@ -2,6 +2,7 @@ package fin.laakso.burlybugs;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -80,6 +81,18 @@ public class Entity extends GameObject {
             shootingWeapons.add(missileBM) ;
             backpack.setShotStartTime(System.nanoTime() );
         }
+
+    }
+
+    public void giveItem(Item pickedItem) {
+        health += 150;
+    }
+
+    public void update() {
+
+    }
+
+    public void draw(Canvas canvas) {
 
     }
 

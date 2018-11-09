@@ -66,7 +66,7 @@ public class WeaponPanel extends GameObject {
     public void draw(Canvas canvas)
     {
 
-        canvas.drawRect(items,itemsPaint);
+        //canvas.drawRect(items,itemsPaint);
         canvas.drawRect(weaponsBackground, weaponsPaint);
         canvas.drawRect(selectedItem,selectedItemPaint);
 

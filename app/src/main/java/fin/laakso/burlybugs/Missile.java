@@ -74,7 +74,7 @@ public class Missile extends Weapon {
 
         activationTime--;
 
-       Log.d("VELS X/y",""+ velocityX +"/" + velocityY);
+       //Log.d("VELS X/y",""+ velocityX +"/" + velocityY);
         x += velocityX;
         y += velocityY;
 
