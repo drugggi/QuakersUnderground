@@ -62,7 +62,7 @@ public class MainThread extends Thread {
 
             try {
                 totalWaitTime += waitTime;
-                sleep(waitTime);
+                this.sleep(waitTime);
             } catch (Exception e) {
                 e.printStackTrace();
             }

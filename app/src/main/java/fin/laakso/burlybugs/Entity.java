@@ -15,6 +15,8 @@ public class Entity extends GameObject {
     protected int health;
     protected boolean jumping;
 
+    protected Animation animation = new Animation();
+
     protected Backpack backpack;
     protected World gameWorld;
 

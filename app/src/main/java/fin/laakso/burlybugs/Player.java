@@ -20,14 +20,11 @@ public class Player extends Entity {
 
     private boolean moving;
     private boolean playing;
-    // private boolean jumping;
-    private Animation animation = new Animation();
 
     private boolean parachute;
     private boolean anchor;
 
     private GameCamera camera;
-
     // private World gameWorld;
 
     private int updateAmount;
@@ -88,25 +85,27 @@ public class Player extends Entity {
     @Override
     public void shoot(ArrayList<Weapon> shootingWeapons, int towardsX, int towradsY) {
 
-        long missileElapsed2 = (System.nanoTime() - backpack.getShotStartTime() )/1000000;
-        if (missileElapsed2 < 500) {return; }
+        long missileElapsed2 = (System.nanoTime() - backpack.getShotStartTime()) / 1000000;
+        if (missileElapsed2 < 500) {
+            return;
+        }
 
-        towardsX = towardsX+camera.getxOffset() ;
-        towradsY = towradsY+ camera.getyOffset() ;
+        towardsX = towardsX + camera.getxOffset();
+        towradsY = towradsY + camera.getyOffset();
 
-        float differenceX =  (x - towardsX);
-        float differenceY = (y- towradsY);
+        float differenceX = (x - towardsX);
+        float differenceY = (y - towradsY);
 
-        double angle = atan(differenceY/differenceX);
+        double angle = atan(differenceY / differenceX);
 
         int velX = (int) (50 * cos(angle));
         int velY = (int) (50 * sin(angle));
 
         if (differenceX < 0) {
-            velX = -1*velX;
-            velY = -1*velY;
+            velX = -1 * velX;
+            velY = -1 * velY;
         }
-         angle = Math.toDegrees(angle);
+        angle = Math.toDegrees(angle);
 
         if (differenceX < 0) {
             angle += 180;
@@ -115,45 +114,14 @@ public class Player extends Entity {
         if (differenceY < 0) {
 
         }
-        Missile newMissile = new Missile(camera,Assets.missile,x+16,y+16,45,15,13,(float)angle);
-        backpack.setShotStartTime(System.nanoTime() );
+        Missile newMissile = new Missile(camera, Assets.missile, x + 16, y + 16, 45, 15, 13, (float) angle);
+        backpack.setShotStartTime(System.nanoTime());
 
-         newMissile.setVelocity(-velX/4,-velY/4);
-         newMissile.setEntity(this);
+        newMissile.setVelocity(-velX / 4, -velY / 4);
+        newMissile.setEntity(this);
 
         shootingWeapons.add(newMissile);
 
-    }
-    public Shotgun addShot(float rawX, float rawY) {
-
-        int directionX = (int ) rawX ;
-        int directionY = (int) rawY;
-        // Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
-        float differenceX =  (x - directionX);
-        float differenceY = (y - directionY);
-
-        Log.d("Diffs",""+differenceX+"/"+differenceY);
-        double angle = Math.toDegrees(atan(differenceY/differenceX));
-
-       // Log.d("angle","deeg "+angle);
-
-        angle = Math.toRadians(angle);
-
-       // Log.d("angle","rad "+angle);
-
-        int velX = (int) (50 * cos(angle)) + dx;
-        int velY = (int) (50 * sin(angle)) + dy;
-        Log.d("velocity","velX/velY.  "+velX + "/" + velY);
-
-        if (differenceX < 0) {
-            velX = -1*velX;
-            velY = -1*velY;
-        }
-
-
-        Shotgun newShot = new Shotgun(x,y,4,velX,velY);
-
-        return newShot;
     }
 
 
@@ -182,21 +150,11 @@ public class Player extends Entity {
 
     public void setDirection(float rawX,float rawY) {
 
-
-
-       // Log.d("parachute",""+parachute);
         int directionX = (int ) rawX +camera.getxOffset() ;
         int directionY = (int) rawY + camera.getyOffset() ;
-       // Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
+
         int differenceX = - (x - directionX);
         int differenceY = - (y - directionY);
-
-        // Log.d("Diffs",""+differenceX + "/" + differenceY);
-
-        // Tile pointedTile = gameWorld.getTile(differenceX/Tile.TILE_WIDTH,directionY/Tile.TILE_HEIGHT);
-        // Log.d("Tile",""+ pointedTile.toString() );
-
-
 
         if (!moving && !jumping) {
             dx = differenceX / 20;
@@ -215,9 +173,7 @@ public class Player extends Entity {
             dy = differenceY / 15 ;
         }
 
-
     }
-
 
     public void update() {
         updateAmount++;
@@ -227,6 +183,7 @@ public class Player extends Entity {
         if (!moving && !parachute) {
 
              dx = dx *  11 / 12;
+             Log.d("UPDATE","DX: " +dx);
             // dx = dx / 2;
         }
         x += dx ;
@@ -243,7 +200,6 @@ public class Player extends Entity {
             jumping = false;
             parachute = false;
         }
-       // y = y + GamePanel.GRAVITY;
 
 
        //  x += dx ;
@@ -315,18 +271,14 @@ public class Player extends Entity {
             // Log.d("Tile", "solid: " + headTile.isSolid() + "  " + headTile.toString());
             if ( headTile.isSolid() ) {
                 dy = 0;
-                // jumping = false;
-                // y =
+
             }
         }
-       // Log.d("player update","dx/dy: " + dx +"/"+dy);
 
-        // dy = 0;
     }
 
     public void draw(Canvas canvas) {
-       // Log.d("player DRAW","x/y: " + x +"/"+y);
-        // This may need offset in future
+
         canvas.drawBitmap(animation.getImage() , x -camera.getxOffset(), y - camera.getyOffset(),null);
     }
 
