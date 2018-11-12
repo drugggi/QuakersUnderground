@@ -35,9 +35,7 @@ public class MainThread extends Thread {
             startTime = System.nanoTime();
             canvas = null;
 
-
             // try locking the canvas for pixel editing
-
             try {
                 canvas = this.surfaceHolder.lockCanvas();
                 synchronized (surfaceHolder) {
@@ -58,14 +56,15 @@ public class MainThread extends Thread {
                     }
                 }
             }
+
             timeMillis = (System.nanoTime() - startTime)/1000000L;
             waitTime = targetTime - timeMillis;
 
             try {
                 totalWaitTime += waitTime;
-                this.sleep(waitTime);
+                sleep(waitTime);
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
             totalTime += System.nanoTime() - startTime;
             frameCount++;
@@ -74,7 +73,7 @@ public class MainThread extends Thread {
                 frameCount = 0;
                 totalTime = 0;
 
-                // PRINTING SOME STATS
+                // printing some stuff for every ten second
                 seconds_passed++;
                 if (seconds_passed %10 == 0) {
                     Log.d("GAMELOOPSTATS", seconds_passed + "s  avgFPS: " + averageFPS + "  avg waittime/s: " + totalWaitTime/seconds_passed + "ms");

@@ -75,7 +75,7 @@ public class Entity extends GameObject {
                 //playerAdditionY = 64;
             }
 
-            Missile missileBM = new Missile(gameWorld.getCamera(),Assets.missile,x+16,y+16,45,15,1,13,(float)angle);
+            Missile missileBM = new Missile(gameWorld.getCamera(),Assets.missile,x+16,y+16,45,15,13,(float)angle);
             missileBM.setVelocity(-velX/2,-velY/2);
 
             shootingWeapons.add(missileBM) ;

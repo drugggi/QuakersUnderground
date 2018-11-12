@@ -21,9 +21,6 @@ public class Item extends GameObject {
     GameCamera camera;
 
     public Item(World gameWorld, int x, int y, int armorAmount) {
-        // this.radius= r;
-        // this.velocityX = -velocityX;
-        //this.velocityY = -velocityY;
 
         rng = new Random();
 
@@ -69,7 +66,6 @@ public class Item extends GameObject {
     }
 
     public void update() {
-        // armor.set(this.x-camera.getxOffset(),this.y-camera.getyOffset(),50,50);
         animation.update();
     }
 

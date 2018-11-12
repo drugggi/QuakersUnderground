@@ -81,7 +81,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         world = new World(camera,"");
         player.setWorldObject(world);
         enemy.setWorldObject(world);
-        
+
         weaponPanel = new WeaponPanel(Assets.weaponpanel);
 
         players.add(enemy);

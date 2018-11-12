@@ -12,34 +12,21 @@ import static java.lang.Math.sin;
 
 public class Missile extends Weapon {
 
-    private int score;
-    private int speed;
-    private Random rng = new Random();
+
     private Animation animation = new Animation();
     private Bitmap spritesheet;
-
-    //private int velocityX;
-    //private int velocityY;
 
     private GameCamera camera;
 
     // Maybe use this to blow up a missile after certain time
     private int activationTime;
 
-    public Missile(GameCamera camera,Bitmap res,int x, int y, int w, int h, int s, int numFrames, float angle) {
+    public Missile(GameCamera camera,Bitmap res,int x, int y, int w, int h, int numFrames, float angle) {
 
-        super.x = x; // x-camera.getxOffset();
-        super.y = y; //y-camera.getyOffset();
+        super.x = x;
+        super.y = y;
         width = w;
         height = h;
-        score = s;
-
-        speed = 1 + rng.nextInt(3);
-
-        // cap missile speed
-        if (speed >= 40) {
-            speed = 40;
-        }
 
         Bitmap[] image = new Bitmap[numFrames];
 
@@ -52,12 +39,9 @@ public class Missile extends Weapon {
 
         this.camera = camera;
         animation.setFrames(image);
-        animation.setDelay(100-speed);
+        animation.setDelay(100);
 
         activationTime = 2;
-
-        // velocityX = (int) (50 * cos(angle));
-        // velocityY = (int) (50 * sin(angle));
 
     }
 
@@ -70,17 +54,10 @@ public class Missile extends Weapon {
     }
 
     public void update() {
-       //  x -= speed;
-
         activationTime--;
 
-       //Log.d("VELS X/y",""+ velocityX +"/" + velocityY);
         x += velocityX;
         y += velocityY;
-
-
-        //velocityX++;
-        //velocityY++;
 
         animation.update();
 

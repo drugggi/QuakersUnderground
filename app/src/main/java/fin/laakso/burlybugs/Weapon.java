@@ -11,8 +11,7 @@ public class Weapon extends GameObject {
     int ammo;
 
     private Entity whoShotThis;
-
-
+    
     Weapon() {
         ammo = 0;
     }

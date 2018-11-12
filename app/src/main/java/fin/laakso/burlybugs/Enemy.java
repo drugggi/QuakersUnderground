@@ -154,7 +154,7 @@ public class Enemy extends Entity {
         if (differenceY < 0) {
             //playerAdditionY = 64;
         }
-        Missile newMissile = new Missile(camera,Assets.missile,x+16,y+16,45,15,1,13,(float)angle);
+        Missile newMissile = new Missile(camera,Assets.missile,x+16,y+16,45,15,13,(float)angle);
         backpack.setShotStartTime(System.nanoTime() );
 
         newMissile.setVelocity(-velX/4,-velY/4);
@@ -200,7 +200,7 @@ public class Enemy extends Entity {
         if (differenceY < 0) {
             //playerAdditionY = 64;
         }
-        Missile newMissile = new Missile(camera,missileBM,x+16,y+16,45,15,1,13,(float)angle);
+        Missile newMissile = new Missile(camera,missileBM,x+16,y+16,45,15,13,(float)angle);
         newMissile.setVelocity(-velX/2,-velY/2);
 
         return newMissile;

@@ -7,9 +7,7 @@ import android.util.Log;
 public class Background {
 
     private Bitmap image;
-
     private int x, y, dx , dy;
-
 
     public Background(Bitmap res) {
         image = res;
@@ -37,10 +35,7 @@ public class Background {
 
     public void draw(Canvas canvas) {
 
-        // first we draw image from x = -(856-0) and y = -(480-0)
-
         canvas.drawBitmap(image,x,y,null);
-       //Log.d("XY","x/y " + x + "/" + y);
 
        // Depending where the original imges we have to draw three more images either top bottom left or right
         // from the original image so that whole screen is filled
@@ -67,9 +62,9 @@ public class Background {
            canvas.drawBitmap(image,x-GamePanel.WIDTH,y-GamePanel.HEIGHT,null);
        }
 
-
     }
 
+    // Probably will never be used, sets the background moving in one direction all the time
     public void setVector(int dx, int dy) {
         this.dy = dx;
         this.dx = dy;
