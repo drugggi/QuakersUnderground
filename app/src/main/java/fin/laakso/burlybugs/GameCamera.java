@@ -40,10 +40,10 @@ public class GameCamera {
             directionBonusY = directionBonusY *11 / 12;
         }
         else if (DY < 0) {
-            directionBonusY -= 4;
+            directionBonusY -= 2;
         }
         else {
-            directionBonusY += 4;
+            directionBonusY += 2;
         }
 
 

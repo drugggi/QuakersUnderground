@@ -154,18 +154,18 @@ public class Player extends Entity {
         int directionY = (int) rawY + camera.getyOffset() ;
 
         int differenceX = - (x - directionX);
-        int differenceY = - (y - directionY);
+        int differenceY = - (y - directionY)*2;
 
         if (!moving && !jumping) {
             dx = differenceX / 20;
             moving = true;
         }
 
-        if ( dx > 15) {
-            dx = 15;
+        if ( dx > 10) {
+            dx = 10;
         }
-        else if (dx < -15 ){
-            dx = -15;
+        else if (dx < -10 ){
+            dx = -10;
         }
 
         if (!jumping && differenceY < -20) {
@@ -191,7 +191,13 @@ public class Player extends Entity {
                 dy = 1;
             }
             else {
-                dy = dy - GamePanel.GRAVITY;
+
+                if (dy > 15) {
+                    dy = 15;
+                }
+                else {
+                    dy = dy - GamePanel.GRAVITY;
+                }
             }
         }
         else {
