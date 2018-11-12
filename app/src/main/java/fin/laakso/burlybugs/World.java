@@ -5,6 +5,7 @@ import android.util.Log;
 
 public class World {
 
+    // Whole playareas widht and height, important variablse used in many places
     private int width, height;
     private int[][] tiles;
     private GameCamera camera;
@@ -28,12 +29,14 @@ public class World {
             for (int x = xStart ; x < xEnd ; x++) {
                 if (tiles[y][x] != 0){
                     getTile(x, y).draw(canvas, x * Tile.TILE_HEIGHT - camera.getxOffset(), y * Tile.TILE_HEIGHT-camera.getyOffset());
-                    //getTile(x, y).draw(canvas, x * Tile.TILE_HEIGHT , y * Tile.TILE_HEIGHT);
+
                 }
             }
         }
     }
 
+    // It easy te request tiles that are not in map, so we have to check that
+    // Maybe return Tile.emptyspace or something in future
     public Tile getTile(int x, int y) {
         if (x < 0 || y < 0 || x >= width || y >= height) {
            // Log.e("ERROR","getTile out of bounds: " + x + "/"+y);

@@ -18,12 +18,8 @@ public class WeaponPanel extends GameObject {
     private int selectedItemPosition;
 
     Bitmap weapons;
-   // private GameCamera camera;
 
     public WeaponPanel(Bitmap res) {
-        // this.radius= r;
-        // this.velocityX = -velocityX;
-        //this.velocityY = -velocityY;
 
         weaponsBackground = new Rect(0,0,100,GamePanel.HEIGHT-150);
         items = new Rect(0,GamePanel.HEIGHT-150,150,GamePanel.HEIGHT);
@@ -45,19 +41,14 @@ public class WeaponPanel extends GameObject {
         weaponsPaint.setAlpha(100);
 
         weapons = res;
-        //super.x = x;
-        //super.y = y;
-        //this.camera = camera;
     }
 
     public void update() {
-        // selectedItem = new Rect(0,selectedItemPosition*95,100,selectedItemPosition*95+95);
         selectedItem.set(0,selectedItemPosition*95,100,selectedItemPosition*95+95);
     }
 
     public void setSelectedItem(float positionX,float positionY) {
 
-        //int position = ((int)(positionY + 5) ) / 100;
         selectedItemPosition = ((int)(positionY + 5) ) / 100;
         Log.d("selectedITEMPOS",positionX + "/"+positionY+"   ItemPos: " + selectedItemPosition);
 
@@ -66,7 +57,6 @@ public class WeaponPanel extends GameObject {
     public void draw(Canvas canvas)
     {
 
-        //canvas.drawRect(items,itemsPaint);
         canvas.drawRect(weaponsBackground, weaponsPaint);
         canvas.drawRect(selectedItem,selectedItemPaint);
 

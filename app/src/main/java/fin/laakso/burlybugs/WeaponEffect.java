@@ -17,8 +17,8 @@ public class WeaponEffect extends GameObject {
 
     public WeaponEffect(GameCamera camera, Bitmap res, int x, int y, int w, int h, int numFrames) {
 
-        super.x = x-50; // x-camera.getxOffset();
-        super.y = y-50; //y-camera.getyOffset();
+        super.x = x-50;
+        super.y = y-50;
         width = w;
         height = h;
 
@@ -62,8 +62,7 @@ public class WeaponEffect extends GameObject {
 
 
     public void draw(Canvas canvas) {
-        //Log.d("missiles x/y",""+x+"/" + y + "  offsetxy " + camera.getxOffset() + "/" + camera.getyOffset());
-        // Log.d("Missile drapos",(x-camera.getxOffset())+"/"+(y-camera.getyOffset()));
+
         try {
             canvas.drawBitmap(animation.getImage(),x-camera.getxOffset(),y-camera.getyOffset(),null);
 
@@ -74,7 +73,6 @@ public class WeaponEffect extends GameObject {
     }
     @Override
     public int getWidth() {
-        // offset slightly for more realistic collision detection
         return width;
     }
 

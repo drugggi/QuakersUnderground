@@ -22,8 +22,7 @@ public class Movepuff extends GameObject {
     }
 
     public void update() {
-        //Log.d("vels",""+ velocityX +"/" + velocityY);
-        //Log.d("UPDATE PUFF X/Y","" + x + "/" + y);
+
         x += velocityX/2;
         y += velocityY/2;
     }
@@ -35,11 +34,9 @@ public class Movepuff extends GameObject {
         paint.setStyle(Paint.Style.FILL);
         paint.setAlpha(170);
 
-        //Log.d("DRAW PUFF X/Y","" + x + "/" + y);
-
         canvas.drawCircle(x-camera.getxOffset()- radius, y -camera.getyOffset() - radius, radius , paint);
 
-      //  canvas.drawCircle(x-radius+2, y-radius-2, radius ,paint);
+        canvas.drawCircle(x-radius+2, y-radius-2, radius ,paint);
 
         canvas.drawCircle(x-camera.getxOffset() -radius+4,y-camera.getyOffset()-radius+1,radius,paint);
     }

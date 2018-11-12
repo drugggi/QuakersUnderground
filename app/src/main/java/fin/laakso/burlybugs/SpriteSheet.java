@@ -12,7 +12,6 @@ public class SpriteSheet {
 
     public Bitmap crop(int x,int y, int width, int height) {
         return spritesheet.createBitmap(spritesheet, x, y, width, height);
-
     }
 
     public Bitmap getSpritesheet() {

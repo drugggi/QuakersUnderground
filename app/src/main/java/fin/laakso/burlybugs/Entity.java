@@ -24,7 +24,6 @@ public class Entity extends GameObject {
     }
 
     public Weapon shoot() {
-
         return new Weapon();
     }
 
@@ -33,31 +32,17 @@ public class Entity extends GameObject {
         long missileElapsed = (System.nanoTime() - backpack.getShotStartTime())/1000000;
 
         if (missileElapsed > (500)) {
-            //Bitmap missileBM = Assets.missile;
-           //Bitmap missileBM = BitmapFactory.decodeResource(getResources(),R.drawable.missile);
-
-            //int directionX = (int ) playerX;// +camera.getxOffset() ;
-           // int directionY = (int) playerY;//+ camera.getyOffset() ;
-            //Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
 
             towardsX += gameWorld.getCamera().getxOffset() ;
             towradsY += gameWorld.getCamera().getyOffset() ;
-            //Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
 
             float differenceX =  (x - towardsX);
             float differenceY = (y- towradsY);
 
-            //Log.d("Diffs",""+differenceX+"/"+differenceY);
             double angle = atan(differenceY/differenceX);
-            // angle = rng.nextGaussian()*0.5+angle;
-
-            //Log.d("angle","deeg "+angle);
-
-            //Log.d("angle","rad "+angle);
 
             int velX = (int) (50 * cos(angle));
             int velY = (int) (50 * sin(angle));
-            //Log.d("velocity","velX/velY.  "+velX + "/" + velY);
 
             if (differenceX < 0) {
                 velX = -1*velX;
@@ -65,14 +50,11 @@ public class Entity extends GameObject {
             }
             angle = Math.toDegrees(angle);
 
-
-            //int playerAdditionX = 0,playerAdditionY = 0;
             if (differenceX < 0) {
                 angle += 180;
-                //playerAdditionX = 40;
             }
             if (differenceY < 0) {
-                //playerAdditionY = 64;
+
             }
 
             Missile missileBM = new Missile(gameWorld.getCamera(),Assets.missile,x+16,y+16,45,15,13,(float)angle);
@@ -100,9 +82,6 @@ public class Entity extends GameObject {
 
         int differenceX = getCenterX() - knockX;
         int differenceY = getCenterY() - knockY;
-
-        //Log.d("KNOCKBACK","center x/y: " + getCenterX() + "/"+getCenterY()+ " knox/y"+knockX + "/" +knockY + "  diff:" + differenceX+ "/" + differenceY);
-        //Log.d("Difference","  diff:" + differenceX+ "/" + differenceY);
 
         health -= 100;
         if (differenceX > 0) {
