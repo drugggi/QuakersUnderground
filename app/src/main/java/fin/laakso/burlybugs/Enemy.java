@@ -187,6 +187,9 @@ public class Enemy extends Entity {
 
         if (dy >= 0) {
 
+            checkLegTileCollision();
+            /*
+
             Tile legTile = gameWorld.getTile((x) / Tile.TILE_WIDTH, (y+height) / Tile.TILE_HEIGHT);
             // Log.d("Tile", "solid: " + legTile.isSolid() + "  " + legTile.toString());
 
@@ -198,6 +201,7 @@ public class Enemy extends Entity {
             } else {
                 jumping = true;
             }
+*/
 
         }
 

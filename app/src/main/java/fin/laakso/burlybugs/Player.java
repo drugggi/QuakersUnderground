@@ -183,7 +183,6 @@ public class Player extends Entity {
         if (!moving && !parachute) {
 
              dx = dx *  11 / 12;
-             Log.d("UPDATE","DX: " +dx);
             // dx = dx / 2;
         }
         x += dx ;
@@ -253,16 +252,27 @@ public class Player extends Entity {
         }
         if (dy >= 0) {
 
-            Tile legTile = gameWorld.getTile((x) / Tile.TILE_WIDTH, (y+height) / Tile.TILE_HEIGHT);
-            // Log.d("Tile", "solid: " + legTile.isSolid() + "  " + legTile.toString());
+            checkLegTileCollision();
+/*
+            int tileY = (y+height) / Tile.TILE_HEIGHT;
 
-            if ( legTile.isSolid() ) {
+            Tile leftLegTile = gameWorld.getTile((x) / Tile.TILE_WIDTH, (y+height) / Tile.TILE_HEIGHT);
+            Tile rightLegTile = gameWorld.getTile((x+width)/Tile.TILE_WIDTH, (y+height) / Tile.TILE_HEIGHT);
+           // Log.d("Tile", "x/y: " + (x+width)/Tile.TILE_WIDTH + "/" + (y+height) / Tile.TILE_HEIGHT);
+
+            if (!leftLegTile.isDestructible() || !rightLegTile.isDestructible() ) {
+                dy = 0;
+                //Log.d("tile","x/y: " + (x+width)+ "/" + (y+height) );
+                y = tileY * Tile.TILE_HEIGHT - height;
+                jumping = false;
+            }
+            else if ( leftLegTile.isSolid() || rightLegTile.isSolid()) {
                 dy = 0;
                 jumping = false;
                 // y =
             } else {
                 jumping = true;
-            }
+            }*/
 
         }
 

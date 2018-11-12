@@ -6,6 +6,7 @@ import java.util.Random;
 
 public class Map {
 
+
     private int[][] tiles;
     Random rng;
 
@@ -112,6 +113,21 @@ public class Map {
         int lastRow = tiles.length;
         for (int i = 0 ; i < tiles[lastRow-1].length ; i++) {
             tiles[lastRow-1][i] = 1;
+        }
+
+        int floor = tiles.length-10;
+        for (int i = 0 ; i < tiles[floor].length-10 ; i++) {
+            tiles[floor][i] = 1;
+        }
+
+        floor = tiles.length-25;
+        for (int i = 10 ; i < tiles[floor].length-10 ; i++) {
+            tiles[floor][i] = 1;
+        }
+
+        floor = tiles.length-42;
+        for (int i = 15 ; i < tiles[floor].length-20 ; i++) {
+            tiles[floor][i] = 1;
         }
 
         for (int i = 0 ; i < tiles.length ; i++) {

@@ -9,4 +9,9 @@ public class DirtTile extends Tile {
 
     @Override
     public boolean isSolid() {return true;}
+
+    @Override
+    public boolean isDestructible() {
+        return false;
+    }
 }

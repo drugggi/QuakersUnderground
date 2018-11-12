@@ -57,8 +57,12 @@ public class World {
             return;
         }
         else {
-            tiles[y][x] = newTileId;
+            Tile t = Tile.tileTypes[tiles[y][x]];
+            if (t.isDestructible() ) {
+                tiles[y][x] = newTileId;
+            }
         }
+
     }
 
     private void loadWorld(String path) {
