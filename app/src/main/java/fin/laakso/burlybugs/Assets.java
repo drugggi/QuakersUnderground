@@ -14,6 +14,7 @@ public class Assets {
 
     public static Bitmap missile;
     public static Bitmap redarmor;
+    public static Bitmap weaponpanel;
 
     public static void init(Bitmap spritesheet,Resources res) {
         SpriteSheet testSheet = new SpriteSheet( spritesheet);
@@ -31,6 +32,7 @@ public class Assets {
 
         missile = BitmapFactory.decodeResource(res,R.drawable.missile);
         redarmor = BitmapFactory.decodeResource(res,R.drawable.redarmor);
+        weaponpanel = BitmapFactory.decodeResource(res, R.drawable.weaponpanel);
 
     }
 }
