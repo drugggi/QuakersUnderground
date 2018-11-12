@@ -7,6 +7,8 @@ public class GameCamera {
     private GameObject objectToFollow;
     private int xOffset,yOffset;
 
+    private int directionBonusX=0, directionBonusY = 0;
+
     public GameCamera(GameObject followThis,int xOffset, int yOffset) {
         objectToFollow = followThis;
         this.xOffset = xOffset;
@@ -19,8 +21,34 @@ public class GameCamera {
     }
 
     public void centerOnGameObject() {
-        xOffset = objectToFollow.getX() - GamePanel.WIDTH / 2;
-        yOffset = objectToFollow.getY() - GamePanel.HEIGHT  * 2 / 3;
+
+        int DX = objectToFollow.getDX()*10;
+        int DY = objectToFollow.getDY()*10;
+
+        if (DX == 0) {
+            directionBonusX = directionBonusX*11 / 12;
+        }
+
+        else if (DX < 0) {
+            directionBonusX -= 4;
+        }
+        else {
+            directionBonusX += 4;
+        }
+
+        if (DY == 0) {
+            directionBonusY = directionBonusY *11 / 12;
+        }
+        else if (DY < 0) {
+            directionBonusY -= 4;
+        }
+        else {
+            directionBonusY += 4;
+        }
+
+
+        xOffset = objectToFollow.getX() - GamePanel.WIDTH / 2 + directionBonusX;
+        yOffset = objectToFollow.getY() - GamePanel.HEIGHT / 2 + directionBonusY;
        // Log.d("offsets","x/y: " + xOffset + "/"+yOffset);
 
         if (yOffset + GamePanel.HEIGHT > 2400 ) {
