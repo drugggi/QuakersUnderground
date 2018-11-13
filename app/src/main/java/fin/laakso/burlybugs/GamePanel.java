@@ -315,6 +315,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             // weaponEffects are added when shots are hit, and with weaponeffect we calculate damage
             // knockback etc to entities
             for (int i = 0; i < weaponEffects.size() ; i++) {
+
                 weaponEffects.get(i).update();
 
                 // Weaponeffect animation is played and effects calculated
@@ -330,8 +331,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                             int misX = weaponEffects.get(i).getCenterX();
                             int misY = weaponEffects.get(i).getCenterY();
                             ent.setKnockBack(misX, misY);
+                            // ent.applyKnockBack(weaponEffects.get(i) );
                         }
                     }
+
                     weaponEffects.get(i).setKnockBackApplied(true);
 
                 }

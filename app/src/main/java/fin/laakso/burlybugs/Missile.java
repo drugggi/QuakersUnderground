@@ -98,7 +98,7 @@ public class Missile extends Weapon {
 
         if (weapon.whoShot() != ent && intersect ){
             // Bitmap explosion = BitmapFactory.decodeResource(getResources(), R.drawable.explosion);
-            effects.add(new WeaponEffect(camera, Assets.missileexplosion, weapon.getX(),weapon.getY(), 100, 100, 25));
+            effects.add(new ExplosionEffect(camera, Assets.missileexplosion, weapon.getX(),weapon.getY(), 100, 100, 25));
             weapon.setHit(true);
         }
 
@@ -118,7 +118,7 @@ public class Missile extends Weapon {
 
         if (missileTile.isSolid() ) {
 
-            effects.add(new WeaponEffect(camera, Assets.missileexplosion, weapon.getX(),weapon.getY(), 100, 100, 25));
+            effects.add(new ExplosionEffect(camera, Assets.missileexplosion, weapon.getX(),weapon.getY(), 100, 100, 25));
 
             for (int yy = -1 ; yy < 2 ; yy++) {
                 for (int xx = -1 ; xx < 2 ; xx++) {

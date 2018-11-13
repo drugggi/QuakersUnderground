@@ -66,38 +66,40 @@ public class Shotgun extends Weapon {
         float differenceX = x - towardsX;
         float differenceY = y - towardsY;
 
-        Log.d("DIFFERENCES","differenceX/Y: " + differenceX + "/"+ differenceY);
+        final int incrementAccuracy = 16;
+
+        //Log.d("DIFFERENCES","differenceX/Y: " + differenceX + "/"+ differenceY);
         float incrementX,incrementY;
-        if (differenceX < differenceY) {
+        if (Math.abs(differenceX) > Math.abs(differenceY)) {
 
             if (differenceX < 0) {
-                incrementX = -16;
+                incrementX = -incrementAccuracy;
             }
             else {
-                incrementX = 16;
+                incrementX = incrementAccuracy;
             }
 
             if (differenceX == 0) {
-                Log.e("ERROR", "ZERO DIVISION");
+               //Log.e("ERROR", "ZERO DIVISION");
                 differenceX = 0.1f;
             }
-            incrementY = differenceY * (16 / Math.abs(differenceX));
+            incrementY = differenceY * (incrementAccuracy / Math.abs(differenceX));
         }
         else {
             if (differenceY < 0) {
-                incrementY = -16;
+                incrementY = -incrementAccuracy;
             }
             else {
-                incrementY = 16;
+                incrementY = incrementAccuracy;
             }
             if (differenceY == 0) {
-                Log.e("ERROR", "ZERO DIVISION");
+                //Log.e("ERROR", "ZERO DIVISION");
                 differenceY = 0.1f;
             }
             incrementX = differenceX * (16 / Math.abs(differenceY));
         }
 
-        Log.d("INCREMENT","incrementx/y: " +incrementX + "/"+incrementY);
+        // Log.d("INCREMENT","incrementx/y: " +incrementX + "/"+incrementY);
 
         float increasedX = (x-incrementX);
         float increasedY = (y-incrementY);
@@ -105,8 +107,8 @@ public class Shotgun extends Weapon {
         int tileX = (int)increasedX/Tile.TILE_WIDTH;
         int tileY = (int)increasedY/Tile.TILE_HEIGHT;
         Tile missileTile = gameWorld.getTile(tileX,tileY);
-        int breakPoint = 0;
-        Log.d("tileX/Y",tileX+"/"+tileY+ "  ID:  " + missileTile.getId());
+       // int breakPoint = 0;
+       // Log.d("tileX/Y",tileX+"/"+tileY+ "  ID:  " + missileTile.getId());
 
         while (!missileTile.isSolid() ) {
             increasedX -= incrementX;
@@ -117,20 +119,31 @@ public class Shotgun extends Weapon {
 
             missileTile = gameWorld.getTile(tileX,tileY);
 
-           breakPoint++;
            // Log.d("tileX/Y",tileX+"/"+tileY+ "  ID:  " + missileTile.getId());
-           if (breakPoint >50) {
+/*
+           breakPoint++;
+            Log.d("tileX/Y",tileX+"/"+tileY+ "  ID:  " + missileTile.getId());
+            if (breakPoint >50) {
 
-               Log.d("BREAKPOINT","NO COLLISION");
-               break;
+                Log.d("BREAKPOINT","NO COLLISION");
+                break;
 
-           }
+            }*/
 
         }
 
+        effects.add(new ShotgunEffect(camera, x + 16, y + 16,
+                tileX*Tile.TILE_WIDTH, tileY*Tile.TILE_HEIGHT) );
+        effects.add(new ShotgunEffect(camera, x + 16, y + 16,
+                tileX*Tile.TILE_WIDTH, (tileY+1)*Tile.TILE_HEIGHT) );
+        effects.add(new ShotgunEffect(camera, x + 16, y + 16,
+                (tileX+1)*Tile.TILE_WIDTH, tileY*Tile.TILE_HEIGHT) );
+
+        // camera, Assets.missile, x + 16, y + 16, 45, 15, 13, (float) angle
+
         gameWorld.setTile(tileX,tileY,0);
 
-        weapon.setHit(true);
+         weapon.setHit(true);
 
         // We have to check which tile the shotgun hits first
 
