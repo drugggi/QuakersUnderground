@@ -30,7 +30,9 @@ public class Player extends Entity {
     private int updateAmount;
     private WeaponPanel weaponPanel;
 
-    public Player(Bitmap res, int w, int h, int numFrames) {
+    public Player(Bitmap res,WeaponPanel wp, int w, int h, int numFrames) {
+
+        weaponPanel = wp;
         updateAmount = 0;
 
         super.x = 1000;
@@ -85,8 +87,9 @@ public class Player extends Entity {
     @Override
     public void shoot(ArrayList<Weapon> shootingWeapons, int towardsX, int towradsY) {
 
-        long missileElapsed2 = (System.nanoTime() - backpack.getShotStartTime()) / 1000000;
-        if (missileElapsed2 < 500) {
+
+        long shotElapsed = (System.nanoTime() - backpack.getShotStartTime()) / 1000000;
+        if (shotElapsed < 500) {
             return;
         }
 
@@ -114,13 +117,28 @@ public class Player extends Entity {
         if (differenceY < 0) {
 
         }
-        Missile newMissile = new Missile(camera, Assets.missile, x + 16, y + 16, 45, 15, 13, (float) angle);
-        backpack.setShotStartTime(System.nanoTime());
 
-        newMissile.setVelocity(-velX / 4, -velY / 4);
-        newMissile.setEntity(this);
+        Weapon newWeapon;
 
-        shootingWeapons.add(newMissile);
+        if (weaponPanel.getSelectedItemPosition() == 0) {
+            newWeapon = new Shotgun(camera,x+16,y+16,5,towardsX,towradsY);
+
+
+
+            newWeapon.setVelocity(-velX,-velY);
+            newWeapon.setEntity(this);
+            backpack.setShotStartTime(System.nanoTime()+500);
+        }
+
+        else {
+            newWeapon = new Missile(camera, Assets.missile, x + 16, y + 16, 45, 15, 13, (float) angle);
+
+            newWeapon.setVelocity(-velX / 4, -velY / 4);
+            newWeapon.setEntity(this);
+            backpack.setShotStartTime(System.nanoTime());
+
+        }
+        shootingWeapons.add(newWeapon);
 
     }
 

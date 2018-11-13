@@ -12,7 +12,7 @@ public class Assets {
     //public static final int TILE_WIDTH = 32,TILE_HEIGHT = 32;
     public static Bitmap stone,dirt, grass, sand, wind, empty, sky, tree, cloud, plant;
 
-    public static Bitmap missile;
+    public static Bitmap missile,missileexplosion;
     public static Bitmap redarmor;
     public static Bitmap weaponpanel;
 
@@ -33,6 +33,7 @@ public class Assets {
         missile = BitmapFactory.decodeResource(res,R.drawable.missile);
         redarmor = BitmapFactory.decodeResource(res,R.drawable.redarmor);
         weaponpanel = BitmapFactory.decodeResource(res, R.drawable.weaponpanel);
+        missileexplosion = BitmapFactory.decodeResource(res,R.drawable.explosion);
 
     }
 }

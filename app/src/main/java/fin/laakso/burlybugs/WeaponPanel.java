@@ -54,6 +54,10 @@ public class WeaponPanel extends GameObject {
 
     }
 
+    public int getSelectedItemPosition() {
+        return selectedItemPosition;
+    }
+
     public void draw(Canvas canvas)
     {
 

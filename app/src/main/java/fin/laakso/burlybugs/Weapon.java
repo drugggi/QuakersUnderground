@@ -3,6 +3,8 @@ package fin.laakso.burlybugs;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import java.util.ArrayList;
+
 public class Weapon extends GameObject {
 
     protected int velocityX;
@@ -12,7 +14,12 @@ public class Weapon extends GameObject {
 
     private Entity whoShotThis;
 
+    public boolean hit;
+
+    protected GameCamera camera;
+
     Weapon() {
+        hit = false;
         ammo = 0;
     }
 
@@ -38,7 +45,28 @@ public class Weapon extends GameObject {
         return whoShotThis;
     }
 
+    public void setVelocity(int velX, int velY) {
+        velocityX = velX;
+        velocityY = velY;
+    }
+
     public boolean isActivated() {
         return true;
+    }
+
+    public boolean isHit() {
+        return hit;
+    }
+
+    public void setHit(boolean h) {
+        hit = h;
+    }
+
+    public void collisionEntities(Weapon weapon, Entity ent, ArrayList<WeaponEffect> effects) {
+
+    }
+
+    public void collisionTiles(Weapon weapon,World gameWorld,ArrayList<WeaponEffect> effects) {
+
     }
 }

@@ -1,39 +1,138 @@
 package fin.laakso.burlybugs;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Rect;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 public class Shotgun extends Weapon {
 
-    public int radius;
+    private int radius;
+    private int towardsX;
+    private int towardsY;
     //private int velocityX;
     //private int velocityY;
 
-    public Shotgun(int x, int y, int r, int velocityX, int velocityY) {
+    public Shotgun(GameCamera camera,int startX, int startY, int r, int towardsX, int towardsY) {
         this.radius= r;
-        super.velocityX = -velocityX;
-        super.velocityY = -velocityY;
-        super.x = x;
-        super.y = y;
+        this.towardsX = towardsX;
+        this.towardsY = towardsY;
+
+        super.x = startX;
+        super.y = startY;
+        super.camera = camera;
     }
 
     public void update() {
         // Log.d("vels",""+ velocityX +"/" + velocityY);
-        x += velocityX;
-        y += velocityY;
+        //x += velocityX;
+       // y += velocityY;
     }
 
     public void draw(Canvas canvas) {
         Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
+        paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.FILL);
         paint.setAlpha(255);
 
-        canvas.drawCircle(x-radius, y -radius, radius , paint);
+       // canvas.drawBitmap(animation.getImage(),x-camera.getxOffset(),y-camera.getyOffset(),null);
 
-         canvas.drawCircle(x-radius+2, y-radius-2, radius ,paint);
+        //canvas.drawCircle(x-radius-camera.getxOffset(), y -radius-camera.getyOffset(), radius , paint);
 
-        canvas.drawCircle(x-radius+4,y-radius+1,radius,paint);
+       //  canvas.drawCircle(x-radius+2, y-radius-2, radius ,paint);
+
+      //  canvas.drawCircle(x-radius+4,y-radius+1,radius,paint);
+
+        canvas.drawLine((float)x-camera.getxOffset(),(float)y-camera.getyOffset(),(float)towardsX-camera.getxOffset(),(float)towardsY-camera.getyOffset(),paint);
+    }
+
+    @Override
+    public void collisionEntities(Weapon weapon, Entity ent, ArrayList<WeaponEffect> effects) {
+        if (weapon.isHit() ) {return; }
+
+
+    }
+
+    @Override
+    public void collisionTiles(Weapon weapon, World gameWorld, ArrayList<WeaponEffect> effects) {
+        if (weapon.isHit() ) {return; }
+
+        float differenceX = x - towardsX;
+        float differenceY = y - towardsY;
+
+        Log.d("DIFFERENCES","differenceX/Y: " + differenceX + "/"+ differenceY);
+        float incrementX,incrementY;
+        if (differenceX < differenceY) {
+
+            if (differenceX < 0) {
+                incrementX = -16;
+            }
+            else {
+                incrementX = 16;
+            }
+
+            if (differenceX == 0) {
+                Log.e("ERROR", "ZERO DIVISION");
+                differenceX = 0.1f;
+            }
+            incrementY = differenceY * (16 / Math.abs(differenceX));
+        }
+        else {
+            if (differenceY < 0) {
+                incrementY = -16;
+            }
+            else {
+                incrementY = 16;
+            }
+            if (differenceY == 0) {
+                Log.e("ERROR", "ZERO DIVISION");
+                differenceY = 0.1f;
+            }
+            incrementX = differenceX * (16 / Math.abs(differenceY));
+        }
+
+        Log.d("INCREMENT","incrementx/y: " +incrementX + "/"+incrementY);
+
+        float increasedX = (x-incrementX);
+        float increasedY = (y-incrementY);
+
+        int tileX = (int)increasedX/Tile.TILE_WIDTH;
+        int tileY = (int)increasedY/Tile.TILE_HEIGHT;
+        Tile missileTile = gameWorld.getTile(tileX,tileY);
+        int breakPoint = 0;
+        Log.d("tileX/Y",tileX+"/"+tileY+ "  ID:  " + missileTile.getId());
+
+        while (!missileTile.isSolid() ) {
+            increasedX -= incrementX;
+            increasedY -= incrementY;
+
+           tileX = (int)increasedX/Tile.TILE_WIDTH;
+           tileY = (int)increasedY/Tile.TILE_HEIGHT;
+
+            missileTile = gameWorld.getTile(tileX,tileY);
+
+           breakPoint++;
+           // Log.d("tileX/Y",tileX+"/"+tileY+ "  ID:  " + missileTile.getId());
+           if (breakPoint >50) {
+
+               Log.d("BREAKPOINT","NO COLLISION");
+               break;
+
+           }
+
+        }
+
+        gameWorld.setTile(tileX,tileY,0);
+
+        weapon.setHit(true);
+
+        // We have to check which tile the shotgun hits first
+
     }
 }

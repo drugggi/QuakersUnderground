@@ -55,8 +55,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
 
+
+        Assets.init(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest),getResources() );
+
+        weaponPanel = new WeaponPanel(Assets.weaponpanel);
+
          bg = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.dry_soil) );
-         player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.heroart),64,64,6);
+         player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.heroart),weaponPanel,64,64,6);
          enemy = new Enemy(BitmapFactory.decodeResource(getResources(),R.drawable.heroart),64,64,6);
          weaponEffects = new ArrayList<>();
          items = new ArrayList<>();
@@ -64,8 +69,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
          players = new ArrayList<>();
 
         puffs = new ArrayList<Movepuff>();
-
-        Assets.init(BitmapFactory.decodeResource(getResources(),R.drawable.tilemaptest),getResources() );
         camera = new GameCamera(player,0,0);
         player.setCamera(camera);
 
@@ -81,8 +84,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         world = new World(camera,"");
         player.setWorldObject(world);
         enemy.setWorldObject(world);
-
-        weaponPanel = new WeaponPanel(Assets.weaponpanel);
 
         players.add(enemy);
         players.add(player);
@@ -239,7 +240,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             for (Entity ent: players) {
                 for (int i = 0 ; i < weapons.size() ; i++) {
 
-                    int misX = weapons.get(i).getX();
+                    weapons.get(i).collisionTiles(weapons.get(i),world, weaponEffects);
+                    weapons.get(i).collisionEntities(weapons.get(i),ent,weaponEffects);
+
+                    if (weapons.get(i).isHit() ) {
+                        weapons.remove(i);
+                    }
+                    else {
+                        weapons.get(i).update();
+                    }
+
+                    /*int misX = weapons.get(i).getX();
                     int misY = weapons.get(i).getY();
 
                     int tileX = misX/Tile.TILE_WIDTH;
@@ -247,6 +258,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     Tile missileTile = world.getTile(tileX,tileY);
 
                     if (missileTile.isSolid() ) {
+
                         Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
                         weaponEffects.add(new WeaponEffect(camera,explosion,misX,misY,100,100,25));
 
@@ -259,26 +271,25 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                         continue;
                     }
 
-                    // If it is Entityts own shot we dont check collision
-                    if (weapons.get(i).whoShot() != ent && collision(weapons.get(i), ent)) {
 
                         Bitmap explosion = BitmapFactory.decodeResource(getResources(),R.drawable.explosion);
                         weaponEffects.add(new WeaponEffect(camera,explosion,misX,misY,100,100,25));
+*/
 
-                        weapons.remove(i);
-                        continue;
-                    }
+
+/*
 
                     if (misX < 0 || misX > world.getWorldWidth() ||
                             misY < 0 || misY > world.getWorldHeight() ) {
                         weapons.remove(i);
                         continue;
                     }
-
-                    weapons.get(i).update();
+*/
 
                 }
             }
+
+
 
             // Some move puff stuff feel free to remove
             long elapsed = (System.nanoTime() - puffStartTime)/1000000;
@@ -335,7 +346,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             if (puffs.size() > 30) {
                 puffs.clear();
             }
-
+            for (int i = 0 ; i < weapons.size() ; i++) {
+                if (weapons.get(i).isHit() ) {
+                    weapons.remove(i);
+                }
+            }
+            if (weapons.size() > 5) {
+                Log.d("WEAPONS", "SIZE: " + weapons.size());
+            }
         }
     }
 
