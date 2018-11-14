@@ -127,6 +127,7 @@ public class Player extends Entity {
 
             newWeapon.setVelocity(-velX,-velY);
             newWeapon.setEntity(this);
+
             backpack.setShotStartTime(System.nanoTime()+500);
         }
 

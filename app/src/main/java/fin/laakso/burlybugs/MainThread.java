@@ -64,8 +64,9 @@ public class MainThread extends Thread {
                 totalWaitTime += waitTime;
                 if (waitTime <= 0 ) {
                     Log.e("ERROR ","MAINTHREAD:65 is this cause of lock: waitTime: " + waitTime);
+                }else {
+                    this.sleep(waitTime);
                 }
-                this.sleep(waitTime);
             } catch (Exception e) {
                 e.printStackTrace();
             }

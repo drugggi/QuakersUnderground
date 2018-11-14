@@ -241,7 +241,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 for (int i = 0 ; i < weapons.size() ; i++) {
 
                     weapons.get(i).collisionTiles(weapons.get(i),world, weaponEffects);
-                    weapons.get(i).collisionEntities(weapons.get(i),ent,weaponEffects);
+                    weapons.get(i).collisionEntities(weapons.get(i),ent, weaponEffects);
 
                     if (weapons.get(i).isHit() ) {
                         weapons.remove(i);
@@ -290,6 +290,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             }
 
 
+/*
 
             // Some move puff stuff feel free to remove
             long elapsed = (System.nanoTime() - puffStartTime)/1000000;
@@ -311,6 +312,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 puffs.get(i).update();
 
             }
+*/
 
             // weaponEffects are added when shots are hit, and with weaponeffect we calculate damage
             // knockback etc to entities
@@ -324,15 +326,21 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     continue;
                 }
 
+                // Log.d("WP","size: " + weaponEffects.size() );
                 if (!weaponEffects.get(i).isKnockBackApplied() ) {
 
                     for (Entity ent: players) {
+                        Log.d("WP EFFECTS","SIZE: " + weaponEffects.size() + ent.getRectangle().toShortString() );
+                        weaponEffects.get(i).calculateKnockback(ent);
+
+      /*
                         if (collision(weaponEffects.get(i),ent) ) {
                             int misX = weaponEffects.get(i).getCenterX();
                             int misY = weaponEffects.get(i).getCenterY();
                             ent.setKnockBack(misX, misY);
                             // ent.applyKnockBack(weaponEffects.get(i) );
                         }
+                        */
                     }
 
                     weaponEffects.get(i).setKnockBackApplied(true);

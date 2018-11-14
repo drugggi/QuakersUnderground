@@ -80,6 +80,26 @@ public class Entity extends GameObject {
 
     }
 
+    public void setHealth(int newHealth) {
+        health = newHealth;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void increaseHealth(int increment) {
+        health += increment;
+    }
+
+    public void setKnockback(int increaseX,int increaseY, int increaseDX,int increaseDY) {
+        x += increaseX;
+        y += increaseY;
+        dx += increaseDX;
+        dy += increaseDY;
+    }
+
+
     public void setKnockBack(int knockX, int knockY) {
 
         int differenceX = getCenterX() - knockX;
@@ -117,6 +137,10 @@ public class Entity extends GameObject {
             y = 100;
             health = 300;
         }
+    }
+
+    public void setJumping(boolean j ) {
+        jumping = j;
     }
 
     protected void checkLegTileCollision() {

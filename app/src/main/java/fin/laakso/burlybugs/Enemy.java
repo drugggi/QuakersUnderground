@@ -141,9 +141,9 @@ public class Enemy extends Entity {
     public void update() {
         animation.update();
         updateAmount++;
-        makeIntelligentDecision();
+        // makeIntelligentDecision();
 
-        //dx = dx *  11 / 12;
+        dx = dx *  11 / 12;
         x += dx ;
         if (jumping) {
             if (parachute) {

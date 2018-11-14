@@ -3,6 +3,7 @@ package fin.laakso.burlybugs;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
 
 import java.util.Random;
 
@@ -48,5 +49,8 @@ public class WeaponEffect extends GameObject {
     }
 
 
+    public void calculateKnockback(Entity ent) {
+        //Log.d("CAlc","weapon why are we here knockback");
+    }
 
 }

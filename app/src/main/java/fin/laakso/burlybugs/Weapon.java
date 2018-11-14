@@ -66,7 +66,8 @@ public class Weapon extends GameObject {
 
     }
 
-    public void collisionTiles(Weapon weapon,World gameWorld,ArrayList<WeaponEffect> effects) {
+    public void collisionTiles(Weapon weapon,World gameWorld, ArrayList<WeaponEffect> effects) {
 
     }
+
 }

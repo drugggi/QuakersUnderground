@@ -55,13 +55,17 @@ public class Shotgun extends Weapon {
 
     @Override
     public void collisionEntities(Weapon weapon, Entity ent, ArrayList<WeaponEffect> effects) {
+
+
+
+
         if (weapon.isHit() ) {return; }
 
 
     }
 
     @Override
-    public void collisionTiles(Weapon weapon, World gameWorld, ArrayList<WeaponEffect> effects) {
+    public void collisionTiles(Weapon weapon,World gameWorld, ArrayList<WeaponEffect> effects) {
         if (weapon.isHit() ) {return; }
 
         float differenceX = x - towardsX;
@@ -150,8 +154,12 @@ public class Shotgun extends Weapon {
             }
 
             // Log.d("SHOTGUN EFFECT","ADDED Tilex/y: " + tileX+ "/"+tileY );
-            effects.add(new ShotgunEffect(camera, x + 16, y + 16,
-                    tileX * Tile.TILE_WIDTH, tileY * Tile.TILE_HEIGHT));
+            ShotgunEffect tempEffect = new ShotgunEffect(camera, x + 16, y + 16,
+                    tileX * Tile.TILE_WIDTH, tileY * Tile.TILE_HEIGHT);
+            tempEffect.setWhoShotThis(whoShot() );
+
+            effects.add(tempEffect);
+
             gameWorld.setTile(tileX,tileY,0);
         }
   /*
