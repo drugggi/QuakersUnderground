@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Shotgun extends Weapon {
 
@@ -65,13 +66,14 @@ public class Shotgun extends Weapon {
 
         float differenceX = x - towardsX;
         float differenceY = y - towardsY;
+        boolean increaseRandomlyX = true;
 
         final int incrementAccuracy = 16;
 
         //Log.d("DIFFERENCES","differenceX/Y: " + differenceX + "/"+ differenceY);
         float incrementX,incrementY;
         if (Math.abs(differenceX) > Math.abs(differenceY)) {
-
+            increaseRandomlyX = false;
             if (differenceX < 0) {
                 incrementX = -incrementAccuracy;
             }
@@ -86,6 +88,7 @@ public class Shotgun extends Weapon {
             incrementY = differenceY * (incrementAccuracy / Math.abs(differenceX));
         }
         else {
+
             if (differenceY < 0) {
                 incrementY = -incrementAccuracy;
             }
@@ -100,48 +103,66 @@ public class Shotgun extends Weapon {
         }
 
         // Log.d("INCREMENT","incrementx/y: " +incrementX + "/"+incrementY);
+        Random rng = new Random();
 
-        float increasedX = (x-incrementX);
-        float increasedY = (y-incrementY);
+        float oldIncrementX = incrementX;
+        float oldIncrementY = incrementY;
 
-        int tileX = (int)increasedX/Tile.TILE_WIDTH;
-        int tileY = (int)increasedY/Tile.TILE_HEIGHT;
-        Tile missileTile = gameWorld.getTile(tileX,tileY);
-       // int breakPoint = 0;
-       // Log.d("tileX/Y",tileX+"/"+tileY+ "  ID:  " + missileTile.getId());
+        for (int i = 0 ; i < 5 ; i++) {
 
-        while (!missileTile.isSolid() ) {
-            increasedX -= incrementX;
-            increasedY -= incrementY;
+            if (increaseRandomlyX) {
+                incrementX = oldIncrementX + 2*rng.nextFloat();
+            }
+            else {
+                incrementY = oldIncrementY + 2*rng.nextFloat();
+            }
+            // Log.d("INCREMENT","RNG incrementx/y: " +incrementX + "/"+incrementY);
+            float increasedX = (x - incrementX);
+            float increasedY = (y - incrementY);
 
-           tileX = (int)increasedX/Tile.TILE_WIDTH;
-           tileY = (int)increasedY/Tile.TILE_HEIGHT;
+            int tileX = (int) increasedX / Tile.TILE_WIDTH;
+            int tileY = (int) increasedY / Tile.TILE_HEIGHT;
+            Tile missileTile = gameWorld.getTile(tileX, tileY);
+            int breakPoint = 0;
+            // Log.d("tileX/Y",tileX+"/"+tileY+ "  ID:  " + missileTile.getId());
 
-            missileTile = gameWorld.getTile(tileX,tileY);
 
-           // Log.d("tileX/Y",tileX+"/"+tileY+ "  ID:  " + missileTile.getId());
-/*
-           breakPoint++;
-            Log.d("tileX/Y",tileX+"/"+tileY+ "  ID:  " + missileTile.getId());
-            if (breakPoint >50) {
+            while (!missileTile.isSolid()) {
+                increasedX -= incrementX;
+                increasedY -= incrementY;
 
-                Log.d("BREAKPOINT","NO COLLISION");
-                break;
+                tileX = (int) increasedX / Tile.TILE_WIDTH;
+                tileY = (int) increasedY / Tile.TILE_HEIGHT;
 
-            }*/
+                missileTile = gameWorld.getTile(tileX, tileY);
 
+                // Log.d("tileX/Y",tileX+"/"+tileY+ "  ID:  " + missileTile.getId());
+
+                breakPoint++;
+                // Log.d("tileX/Y", tileX + "/" + tileY + "  ID:  " + missileTile.getId());
+                if (breakPoint > 200) {
+
+                    Log.d("BREAKPOINT", "NO COLLISION");
+                    break;
+
+                }
+
+            }
+
+            // Log.d("SHOTGUN EFFECT","ADDED Tilex/y: " + tileX+ "/"+tileY );
+            effects.add(new ShotgunEffect(camera, x + 16, y + 16,
+                    tileX * Tile.TILE_WIDTH, tileY * Tile.TILE_HEIGHT));
+            gameWorld.setTile(tileX,tileY,0);
         }
-
-        effects.add(new ShotgunEffect(camera, x + 16, y + 16,
-                tileX*Tile.TILE_WIDTH, tileY*Tile.TILE_HEIGHT) );
+  /*
         effects.add(new ShotgunEffect(camera, x + 16, y + 16,
                 tileX*Tile.TILE_WIDTH, (tileY+1)*Tile.TILE_HEIGHT) );
         effects.add(new ShotgunEffect(camera, x + 16, y + 16,
                 (tileX+1)*Tile.TILE_WIDTH, tileY*Tile.TILE_HEIGHT) );
-
+*/
         // camera, Assets.missile, x + 16, y + 16, 45, 15, 13, (float) angle
 
-        gameWorld.setTile(tileX,tileY,0);
+
 
          weapon.setHit(true);
 

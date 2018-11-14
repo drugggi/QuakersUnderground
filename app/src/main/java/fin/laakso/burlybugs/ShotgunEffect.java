@@ -3,6 +3,7 @@ package fin.laakso.burlybugs;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 public class ShotgunEffect extends WeaponEffect {
 
@@ -46,6 +47,8 @@ public class ShotgunEffect extends WeaponEffect {
         paint.setStyle(Paint.Style.FILL);
         paint.setAlpha(255);
 
+
+       // Log.d("piirto","PIIRTO");
      /*   float[] testFloat = new float[] {(float)x-camera.getxOffset(),(float)y-camera.getyOffset(),(float)towardsX-camera.getxOffset(),(float)towardsY-camera.getyOffset()};
 
         canvas.drawLines(testFloat,paint);*/
