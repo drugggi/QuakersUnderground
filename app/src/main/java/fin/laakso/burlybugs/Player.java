@@ -88,8 +88,12 @@ public class Player extends Entity {
     public void shoot(ArrayList<Weapon> shootingWeapons, int towardsX, int towradsY) {
 
 
+
+
         long shotElapsed = (System.nanoTime() - backpack.getShotStartTime()) / 1000000;
-        if (shotElapsed < 500) {
+        // Log.d("shot elapse",System.nanoTime() + "        " + shotElapsed);
+        if (shotElapsed < 0 ) {
+            // Run click sound
             return;
         }
 
@@ -121,14 +125,11 @@ public class Player extends Entity {
         Weapon newWeapon;
 
         if (weaponPanel.getSelectedItemPosition() == 0) {
-            newWeapon = new Shotgun(camera,x+16,y+16,5,towardsX,towradsY);
-
-
+            newWeapon = new Shotgun(camera,x+16,y+16,towardsX,towradsY);
 
             newWeapon.setVelocity(-velX,-velY);
             newWeapon.setEntity(this);
-
-            backpack.setShotStartTime(System.nanoTime()+500);
+            backpack.setShotStartTime(System.nanoTime()+ Shotgun.SHOTGUN_COOLDOWNTIME);
         }
 
         else {
@@ -136,8 +137,7 @@ public class Player extends Entity {
 
             newWeapon.setVelocity(-velX / 4, -velY / 4);
             newWeapon.setEntity(this);
-            backpack.setShotStartTime(System.nanoTime());
-
+            backpack.setShotStartTime(System.nanoTime()+Missile.MISSILE_COOLDOWNTIME);
         }
         shootingWeapons.add(newWeapon);
 

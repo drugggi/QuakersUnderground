@@ -14,6 +14,7 @@ import static java.lang.Math.sin;
 
 public class Missile extends Weapon {
 
+    public static final int MISSILE_COOLDOWNTIME = 500*1000000;
 
     private Animation animation = new Animation();
     private Bitmap spritesheet;

@@ -12,6 +12,7 @@ public class ShotgunEffect extends WeaponEffect {
     private int towardsY;
     private int update;
     private Entity whoShotThis;
+    Paint paint;
 
     public ShotgunEffect(GameCamera camera,int fromX,int fromY, int toX, int toY) {
         super.camera = camera;
@@ -24,6 +25,11 @@ public class ShotgunEffect extends WeaponEffect {
         this.towardsY = toY;
 
         super.knockBackApplied = false;
+
+        paint = new Paint();
+        paint.setColor(Color.GRAY);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setAlpha(100);
     }
 
 
@@ -34,7 +40,7 @@ public class ShotgunEffect extends WeaponEffect {
 
     @Override
     public boolean finished() {
-        if (update > 30 ) {
+        if (update > 10 ) {
             return true;
         }
         return false;
@@ -47,18 +53,9 @@ public class ShotgunEffect extends WeaponEffect {
 
     @Override
     public void draw(Canvas canvas) {
-        Paint paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setAlpha(255);
 
 
-       // Log.d("piirto","PIIRTO");
-     /*   float[] testFloat = new float[] {(float)x-camera.getxOffset(),(float)y-camera.getyOffset(),(float)towardsX-camera.getxOffset(),(float)towardsY-camera.getyOffset()};
-
-        canvas.drawLines(testFloat,paint);*/
-        //canvas.drawRect(x-camera.getxOffset(),y-camera.getyOffset(),(float)towardsX-camera.getxOffset(),(float)towardsY-camera.getyOffset(),paint);
-        canvas.drawLine((float)x-camera.getxOffset(),(float)y-camera.getyOffset(),(float)towardsX-camera.getxOffset(),(float)towardsY-camera.getyOffset(),paint);
+         canvas.drawLine((float)x-camera.getxOffset(),(float)y-camera.getyOffset(),(float)towardsX-camera.getxOffset(),(float)towardsY-camera.getyOffset(),paint);
     }
 
     @Override
@@ -76,7 +73,7 @@ public class ShotgunEffect extends WeaponEffect {
         int x2 = towardsX;
         int y2 = towardsY;
 
-        Log.d("X1/Y1  X2/Y2", x1 + "/" + y1 + "     " + x2 + "/" + y2);
+       // Log.d("X1/Y1  X2/Y2", x1 + "/" + y1 + "     " + x2 + "/" + y2);
 
         Rect entityRect = ent.getRectangle();
 
@@ -84,15 +81,15 @@ public class ShotgunEffect extends WeaponEffect {
         int maxX = entityRect.right;
         int minY = entityRect.top;
         int maxY = entityRect.bottom;
-        Log.d("minX/maxX  minY/maxY", minX+ "/" + maxX + "     " + minY + "/" + maxY);
+      //  Log.d("minX/maxX  minY/maxY", minX+ "/" + maxX + "     " + minY + "/" + maxY);
 
         if (x2 - x1 == 0) {
-            Log.e("ERROR ", "ZERO DIVISOR");
+           // Log.e("ERROR ", "ZERO DIVISOR");
         }
         float slope = (float) (y2 - y1) / (float) (x2 - x1);
 
         if ((x1 <= minX && x2 <= minX) || (y1 <= minY && y2 <= minY) || (x1 >= maxX && x2 >= maxX) || (y1 >= maxY && y2 >= maxY)) {
-            Log.d("no intersect", "Fast exit");
+           // Log.d("no intersect", "Fast exit");
             return;
         }
 
@@ -101,25 +98,25 @@ public class ShotgunEffect extends WeaponEffect {
         boolean weHaveAHit = false;
         float y = slope * (minX - x1) + y1;
         if (y > minY && y < maxY) {
-            Log.d("INTERSECTS", "WE HAVE A HIT first exit y: " + y);
+           // Log.d("INTERSECTS", "WE HAVE A HIT first exit y: " + y);
             weHaveAHit = true;
         }
 
         y = slope * (maxX - x1) + y1;
         if (y > minY && y < maxY) {
-            Log.d("INTERSECTS", "WE HAVE A HIT second exit y: " + y);
+            //Log.d("INTERSECTS", "WE HAVE A HIT second exit y: " + y);
             weHaveAHit = true;
         }
 
         float x = (minY - y1) / slope + x1;
         if (x > minX && x < maxX) {
-            Log.d("INTERSECTS", "WE HAVE A HIT third exit x: " + x);
+            //Log.d("INTERSECTS", "WE HAVE A HIT third exit x: " + x);
             weHaveAHit = true;
         }
 
         x = (maxY - y1) / slope + x1;
         if (x > minX && x < maxX) {
-            Log.d("INTERSECTS", "WE HAVE A HIT fourth exit x: " + x);
+            //Log.d("INTERSECTS", "WE HAVE A HIT fourth exit x: " + x);
             weHaveAHit = true;
             // return;
         }

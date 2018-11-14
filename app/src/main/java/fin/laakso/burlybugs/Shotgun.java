@@ -14,14 +14,16 @@ import java.util.Random;
 
 public class Shotgun extends Weapon {
 
-    private int radius;
+    public static final int SHOTGUN_COOLDOWNTIME = 250*1000000; //250ms
+
+    // private int radius;
     private int towardsX;
     private int towardsY;
     //private int velocityX;
     //private int velocityY;
 
-    public Shotgun(GameCamera camera,int startX, int startY, int r, int towardsX, int towardsY) {
-        this.radius= r;
+    public Shotgun(GameCamera camera,int startX, int startY,int towardsX, int towardsY) {
+        //this.radius= r;
         this.towardsX = towardsX;
         this.towardsY = towardsY;
 
@@ -160,7 +162,7 @@ public class Shotgun extends Weapon {
 
             effects.add(tempEffect);
 
-            gameWorld.setTile(tileX,tileY,0);
+             gameWorld.setTile(tileX,tileY,0);
         }
   /*
         effects.add(new ShotgunEffect(camera, x + 16, y + 16,
