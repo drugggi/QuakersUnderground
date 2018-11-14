@@ -34,7 +34,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private ArrayList<Weapon> weapons;
     private ArrayList<Entity> players;
 
-    Random rng;
+    public final static Random rng = new Random();
 
     private World world;
     private GameCamera camera;
@@ -80,7 +80,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         player.setPlaying(true);
         player.setJumping(true);
 
-        rng = new Random();
+        //rng = new Random();
         world = new World(camera,"");
         player.setWorldObject(world);
         enemy.setWorldObject(world);
@@ -330,8 +330,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 if (!weaponEffects.get(i).isKnockBackApplied() ) {
 
                     for (Entity ent: players) {
-                        Log.d("WP EFFECTS","SIZE: " + weaponEffects.size() + ent.getRectangle().toShortString() );
-                        weaponEffects.get(i).calculateKnockback(ent);
+                        // Log.d("WP EFFECTS","SIZE: " + weaponEffects.size() + ent.getRectangle().toShortString() );
+                        weaponEffects.get(i).calculateKnockback(ent,weaponEffects);
 
       /*
                         if (collision(weaponEffects.get(i),ent) ) {
@@ -350,7 +350,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
             // Adding items to world randomly
             if (items.size() == 0 || items.size() < 15 && rng.nextInt(30*30) == 0) {
-                Log.d("SIZES",""+weapons.size() + " " + weaponEffects.size() + " " + items.size() + " " + puffs.size());
+               // Log.d("SIZES",""+weapons.size() + " " + weaponEffects.size() + " " + items.size() + " " + puffs.size());
                 items.add(new Item(world,0,0,150));
             }
 
@@ -362,7 +362,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     weapons.remove(i);
                 }
             }
-            if (weapons.size() > 5) {
+            if (weapons.size() > 15) {
                 Log.d("WEAPONS", "SIZE: " + weapons.size());
             }
         }

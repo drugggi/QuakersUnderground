@@ -33,6 +33,14 @@ public abstract class GameObject {
         return dy;
     }
 
+    public void setDX(int newDX) {
+        dx=newDX;
+    }
+    public void setDY(int newDY) {
+        dy = newDY;
+    }
+
+
     public int getHeight() {
         return height;
 

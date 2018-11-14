@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
+import java.util.ArrayList;
+
 public class ExplosionEffect extends WeaponEffect {
 
     private Animation animation = new Animation();
@@ -57,7 +59,7 @@ public class ExplosionEffect extends WeaponEffect {
     }
 
     @Override
-    public void calculateKnockback(Entity ent) {
+    public void calculateKnockback(Entity ent, ArrayList<WeaponEffect> effects) {
 
         if (Rect.intersects(ent.getRectangle(), this.getRectangle())) {
 
@@ -90,6 +92,15 @@ public class ExplosionEffect extends WeaponEffect {
                 // jumping = true;
                 decreaseAmount -= differenceY;
             }
+
+            for (int i = 0; i < 7 ; i ++) {
+                BloodEffect newBlood = new BloodEffect(camera, ent.getX() + GamePanel.rng.nextInt(32)+12,
+                        ent.getY() + GamePanel.rng.nextInt(64), GamePanel.rng.nextInt(7) + 1);
+                newBlood.setDX(dx/2 + GamePanel.rng.nextInt(5) - 2);
+                newBlood.setDY(dy/2 + GamePanel.rng.nextInt(5) - 2);
+                effects.add(newBlood );
+            }
+
 
             ent.setKnockback(x, y, dx, dy);
             ent.increaseHealth(decreaseAmount);

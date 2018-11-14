@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class WeaponEffect extends GameObject {
@@ -49,7 +50,7 @@ public class WeaponEffect extends GameObject {
     }
 
 
-    public void calculateKnockback(Entity ent) {
+    public void calculateKnockback(Entity ent, ArrayList<WeaponEffect> effects) {
         //Log.d("CAlc","weapon why are we here knockback");
     }
 

@@ -29,6 +29,8 @@ public class Shotgun extends Weapon {
 
         super.x = startX;
         super.y = startY;
+
+
         super.camera = camera;
     }
 
@@ -39,7 +41,7 @@ public class Shotgun extends Weapon {
     }
 
     public void draw(Canvas canvas) {
-        Paint paint = new Paint();
+  /*      Paint paint = new Paint();
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.FILL);
         paint.setAlpha(255);
@@ -53,6 +55,9 @@ public class Shotgun extends Weapon {
       //  canvas.drawCircle(x-radius+4,y-radius+1,radius,paint);
 
         canvas.drawLine((float)x-camera.getxOffset(),(float)y-camera.getyOffset(),(float)towardsX-camera.getxOffset(),(float)towardsY-camera.getyOffset(),paint);
+
+    */
+
     }
 
     @Override

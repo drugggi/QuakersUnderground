@@ -6,6 +6,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class ShotgunEffect extends WeaponEffect {
 
     private int towardsX;
@@ -59,7 +62,7 @@ public class ShotgunEffect extends WeaponEffect {
     }
 
     @Override
-    public void calculateKnockback(Entity ent) {
+    public void calculateKnockback(Entity ent, ArrayList<WeaponEffect> effects) {
 
         //Log.d("CAlc","shotgun knockback");
 
@@ -145,6 +148,14 @@ public class ShotgunEffect extends WeaponEffect {
                 entDY = 2;
                 ent.setJumping(true);
             }
+
+
+            // Log.d("blood","entx/y" + ent.getX() + "/" + ent.getY() );
+            BloodEffect newBlood = new BloodEffect(camera,ent.getX()+32,ent.getY()+16,GamePanel.rng.nextInt(7)+1);
+            newBlood.setDX(5*entDX+GamePanel.rng.nextInt(5)-2);
+            newBlood.setDY(5*entDY+GamePanel.rng.nextInt(5)-2);
+
+            effects.add(newBlood );
 
 
             ent.setKnockback(entX, entY, entDX, entDY);
