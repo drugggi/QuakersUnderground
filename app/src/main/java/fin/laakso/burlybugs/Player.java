@@ -24,6 +24,8 @@ public class Player extends Entity {
     private boolean parachute;
     private boolean anchor;
 
+    private boolean shooting;
+
     private GameCamera camera;
     // private World gameWorld;
 
@@ -84,6 +86,13 @@ public class Player extends Entity {
         return parachute;
     }
 
+    public void setShooting(boolean s) {
+        shooting = s;
+    }
+    public boolean isShooting() {
+        return shooting;
+    }
+
     @Override
     public void shoot(ArrayList<Weapon> shootingWeapons, int towardsX, int towradsY) {
 
@@ -127,9 +136,16 @@ public class Player extends Entity {
         if (weaponPanel.getSelectedItemPosition() == 0) {
             newWeapon = new Shotgun(camera,x+16,y+16,towardsX,towradsY);
 
-            newWeapon.setVelocity(-velX,-velY);
+            // newWeapon.setVelocity(-velX,-velY);
             newWeapon.setEntity(this);
             backpack.setShotStartTime(System.nanoTime()+ Shotgun.SHOTGUN_COOLDOWNTIME);
+        }
+
+        else if (weaponPanel.getSelectedItemPosition() == 1) {
+            newWeapon = new Shaft(camera,x+16,y+16,towardsX,towradsY);
+
+            newWeapon.setEntity(this);
+            backpack.setShotStartTime(System.nanoTime() + Shaft.SHAFT_COOLDOWNTIME);
         }
 
         else {

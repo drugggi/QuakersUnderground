@@ -126,6 +126,7 @@ public class Entity extends GameObject {
         dy += increaseDY;
     }
 
+/*
 
     public void setKnockBack(int knockX, int knockY) {
 
@@ -165,6 +166,7 @@ public class Entity extends GameObject {
             health = 300;
         }
     }
+*/
 
     public void setJumping(boolean j ) {
         jumping = j;

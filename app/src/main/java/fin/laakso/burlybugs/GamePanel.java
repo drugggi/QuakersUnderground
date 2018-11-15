@@ -143,8 +143,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         int rawIndex = event.getActionIndex();
         float rawX = event.getRawX() *  WIDTH / getWidth();
         float rawY = event.getRawY() * HEIGHT / getHeight();
+       //  Log.d("is shooting",": " +player.isShooting() );
+        if (player.isShooting() ) {
+            rawX = event.getX(rawIndex);
+            rawY = event.getY(rawIndex);
+           // Log.d("is shooting","yes");
+            player.shoot(weapons,(int)rawX,(int)rawY);
+        }
 
-        if (player.isJumping() && !player.isParachute()) {
+        else if (player.isJumping() && !player.isParachute()) {
             player.keepDirection(rawX,rawY);
         }
 
@@ -156,10 +163,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 rawX = event.getX(rawIndex);
                 rawY = event.getY(rawIndex);
                 player.shoot(weapons,(int)rawX,(int)rawY);
+                player.setShooting(true);
                 return true;
 
                 // in future keep shooting as long as finger stays on screen
             case MotionEvent.ACTION_POINTER_UP:
+                player.setShooting(false);
 
                 return true;
 
@@ -176,14 +185,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     // If player is jumping or anchored to ground finger touching the screen means shooting
                     if (player.isJumping() ) {
                         player.shoot(weapons,(int)rawX,(int)rawY);
+                        player.setShooting(true);
                     }
                     else if (player.isAnchor() ) {
                         player.shoot(weapons,(int)rawX,(int)rawY);
+                        player.setShooting(true);
+
                     }
 
                     // Otherwise set player to move to direction where touch happened
                     else {
                         player.setDirection(rawX,rawY);
+                        // player.setShooting(false);
                     }
 
                 }
@@ -196,6 +209,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
                 if (player.isPlaying() ) {
                     player.setMoving(false);
+                    player.setShooting(false);
                 }
                 else {
                     player.setPlaying(true);

@@ -108,7 +108,6 @@ public class Enemy extends Entity {
 
     @Override
     public void shoot(ArrayList<Weapon> shootingWeapons, int towardsX, int towradsY) {
-
         long missileElapsed2 = (System.nanoTime() - backpack.getShotStartTime() )/1000000;
         if (missileElapsed2 < 1000) {return; }
 
@@ -134,8 +133,6 @@ public class Enemy extends Entity {
             angle += 180;
         }
 
-        // if (differenceY < 0) {        }
-
         Missile newMissile = new Missile(camera,Assets.missile,x+16,y+16,45,15,13,(float)angle);
         backpack.setShotStartTime(System.nanoTime() );
 
@@ -148,9 +145,9 @@ public class Enemy extends Entity {
     public void update() {
         animation.update();
         updateAmount++;
-        makeIntelligentDecision();
+         makeIntelligentDecision();
 
-        // dx = dx *  11 / 12;
+        //dx = dx *  11 / 12;
         x += dx ;
         if (jumping) {
             if (parachute) {
