@@ -35,6 +35,25 @@ public class Entity extends GameObject {
 
     public void deathAnimation(ArrayList<PhysicalEffect> pe) {
 
+        CorpseEffect newCorpse = new CorpseEffect(gameWorld,Assets.torsoanim,x,y,32,32,7);
+        newCorpse.setDX(3*dx+GamePanel.rng.nextInt(5)-2);
+        newCorpse.setDY(3*dy+GamePanel.rng.nextInt(5)-2);
+        pe.add(newCorpse);
+
+        newCorpse = new CorpseEffect(gameWorld,Assets.corpselegsanim,x,y,32,32,6);
+        newCorpse.setDX(3*dx+GamePanel.rng.nextInt(5)-2);
+        newCorpse.setDY(3*dy+GamePanel.rng.nextInt(5)-2);
+        pe.add(newCorpse);
+
+        newCorpse = new CorpseEffect(gameWorld,Assets.corpsehead,x,y,16,16,1);
+        newCorpse.setDX(5*dx+GamePanel.rng.nextInt(5)-2);
+        newCorpse.setDY(5*dy+GamePanel.rng.nextInt(5)-2);
+        pe.add(newCorpse);
+
+        newCorpse = new CorpseEffect(gameWorld,Assets.corpsehand,x,y,32,32,1);
+        newCorpse.setDX(4*dx+GamePanel.rng.nextInt(5)-2);
+        newCorpse.setDY(4*dy+GamePanel.rng.nextInt(5)-2);
+        pe.add(newCorpse);
     }
 
     public void shoot(ArrayList<Weapon> shootingWeapons,int towardsX, int towradsY) {

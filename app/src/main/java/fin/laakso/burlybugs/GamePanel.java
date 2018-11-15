@@ -380,7 +380,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                    // Log.d("ent is ", "dead pe size: " + physicalEffects.size());
 
                     ent.deathAnimation(physicalEffects);
-                    ent.setHealth(100);
+                    ent.setHealth(300);
                     ent.setX(1200);
                     ent.setY(100);
                 }

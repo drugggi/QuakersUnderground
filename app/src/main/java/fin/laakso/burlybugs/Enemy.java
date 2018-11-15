@@ -85,8 +85,8 @@ public class Enemy extends Entity {
             if ( dx > 15) {
                 dx = 15;
             }
-            else if (dx < -15 ){
-                dx = -15;
+            else if (dx < -10 ){
+                dx = -10;
             }
 
         }
@@ -108,7 +108,7 @@ public class Enemy extends Entity {
 
     @Override
     public void shoot(ArrayList<Weapon> shootingWeapons, int towardsX, int towradsY) {
-/*
+
         long missileElapsed2 = (System.nanoTime() - backpack.getShotStartTime() )/1000000;
         if (missileElapsed2 < 1000) {return; }
 
@@ -142,22 +142,28 @@ public class Enemy extends Entity {
         newMissile.setVelocity(-velX/4,-velY/4);
         newMissile.setEntity(this);
 
-        shootingWeapons.add(newMissile);*/
+        shootingWeapons.add(newMissile);
     }
 
     public void update() {
         animation.update();
         updateAmount++;
-        // makeIntelligentDecision();
+        makeIntelligentDecision();
 
-        dx = dx *  11 / 12;
+        // dx = dx *  11 / 12;
         x += dx ;
         if (jumping) {
             if (parachute) {
                 dy = 1;
             }
             else {
-                dy = dy - GamePanel.GRAVITY;
+
+                if (dy > 15) {
+                    dy = 15;
+                }
+                else {
+                    dy = dy - GamePanel.GRAVITY;
+                }
             }
         }
         else {
