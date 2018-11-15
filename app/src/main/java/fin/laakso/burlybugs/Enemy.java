@@ -57,6 +57,8 @@ public class Enemy extends Entity {
 
         shootingTime = false;
 
+        super.health = 100;
+
     }
 
     public boolean isShootingTime() {
@@ -80,6 +82,13 @@ public class Enemy extends Entity {
             dx = differenceX / 30;
             jumping = true;
 
+            if ( dx > 15) {
+                dx = 15;
+            }
+            else if (dx < -15 ){
+                dx = -15;
+            }
+
         }
 
     }
@@ -99,8 +108,7 @@ public class Enemy extends Entity {
 
     @Override
     public void shoot(ArrayList<Weapon> shootingWeapons, int towardsX, int towradsY) {
-
-        /*
+/*
         long missileElapsed2 = (System.nanoTime() - backpack.getShotStartTime() )/1000000;
         if (missileElapsed2 < 1000) {return; }
 
@@ -134,14 +142,13 @@ public class Enemy extends Entity {
         newMissile.setVelocity(-velX/4,-velY/4);
         newMissile.setEntity(this);
 
-        shootingWeapons.add(newMissile);
-*/
+        shootingWeapons.add(newMissile);*/
     }
 
     public void update() {
         animation.update();
         updateAmount++;
-        //makeIntelligentDecision();
+        // makeIntelligentDecision();
 
         dx = dx *  11 / 12;
         x += dx ;
@@ -215,6 +222,31 @@ public class Enemy extends Entity {
                 // y =
             }
         }
+
+    }
+
+    @Override
+    public void deathAnimation(ArrayList<PhysicalEffect> pe) {
+
+        CorpseEffect newCorpse = new CorpseEffect(gameWorld,Assets.torsoanim,x,y,32,32,7);
+        newCorpse.setDX(3*dx+GamePanel.rng.nextInt(5)-2);
+        newCorpse.setDY(3*dy+GamePanel.rng.nextInt(5)-2);
+        pe.add(newCorpse);
+
+        newCorpse = new CorpseEffect(gameWorld,Assets.corpselegsanim,x,y,32,32,6);
+        newCorpse.setDX(3*dx+GamePanel.rng.nextInt(5)-2);
+        newCorpse.setDY(3*dy+GamePanel.rng.nextInt(5)-2);
+        pe.add(newCorpse);
+
+        newCorpse = new CorpseEffect(gameWorld,Assets.corpsehead,x,y,16,16,1);
+        newCorpse.setDX(5*dx+GamePanel.rng.nextInt(5)-2);
+        newCorpse.setDY(5*dy+GamePanel.rng.nextInt(5)-2);
+        pe.add(newCorpse);
+
+        newCorpse = new CorpseEffect(gameWorld,Assets.corpsehand,x,y,32,32,1);
+        newCorpse.setDX(4*dx+GamePanel.rng.nextInt(5)-2);
+        newCorpse.setDY(4*dy+GamePanel.rng.nextInt(5)-2);
+        pe.add(newCorpse);
 
     }
 

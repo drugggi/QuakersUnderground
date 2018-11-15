@@ -66,7 +66,7 @@ public class Shotgun extends Weapon {
 
 
 
-        if (weapon.isHit() ) {return; }
+       //  if (weapon.isHit() ) {return; }
 
 
     }

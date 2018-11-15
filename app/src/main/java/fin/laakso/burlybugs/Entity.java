@@ -25,8 +25,16 @@ public class Entity extends GameObject {
         backpack = new Backpack();
     }
 
+    public boolean isDead() {
+        return (health <= 0);
+    }
+
     public Weapon shoot() {
         return new Weapon();
+    }
+
+    public void deathAnimation(ArrayList<PhysicalEffect> pe) {
+
     }
 
     public void shoot(ArrayList<Weapon> shootingWeapons,int towardsX, int towradsY) {

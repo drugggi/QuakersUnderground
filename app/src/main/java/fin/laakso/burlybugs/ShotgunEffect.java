@@ -162,11 +162,17 @@ public class ShotgunEffect extends WeaponEffect {
             ent.increaseHealth(decreaseAmount);
 
             // Entity dead, respawns 1200,100
-            if (ent.getHealth() <= 0) {
+   /*         if (ent.getHealth() <= 0) {
+
+                CorpseEffect newCorpse = new CorpseEffect(camera,Assets.torsoanim,ent.getX(),ent.getY() );
+                newCorpse.setDX(5*entDX+GamePanel.rng.nextInt(5)-2);
+                newCorpse.setDY(5*entDY+GamePanel.rng.nextInt(5)-2);
+                effects.add(newCorpse);
+               // effects.add(new CorpseEffect(camera,Assets.torsocorpse,1200,100 ));
                 ent.setX(1200);
                 ent.setY(100);
-                ent.setHealth(300);
-            }
+                ent.setHealth(100);
+            }*/
         }
 
 /*

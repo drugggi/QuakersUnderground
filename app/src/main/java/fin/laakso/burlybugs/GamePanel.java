@@ -29,6 +29,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private long puffStartTime;
 
     private ArrayList<WeaponEffect> weaponEffects;
+    private ArrayList<PhysicalEffect> physicalEffects;
     private ArrayList<Item> items;
 
     private ArrayList<Weapon> weapons;
@@ -67,6 +68,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
          items = new ArrayList<>();
          weapons = new ArrayList<>();
          players = new ArrayList<>();
+         physicalEffects = new ArrayList<>();
 
         puffs = new ArrayList<Movepuff>();
         camera = new GameCamera(player,0,0);
@@ -222,6 +224,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             // We have to do entitys.update() in future
             player.update();
             enemy.update();
+
+            for (int i = 0 ; i < physicalEffects.size() ; i++ ) {
+                if (physicalEffects.get(i).finished() ) {
+                    physicalEffects.remove(i);
+                }
+                else {
+                    physicalEffects.get(i).update();
+                }
+            }
             enemy.shoot(weapons,player.getX(),player.getY() );
 
             // Are items collected
@@ -350,7 +361,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
             // Adding items to world randomly
             if (items.size() == 0 || items.size() < 15 && rng.nextInt(30*30) == 0) {
-               // Log.d("SIZES",""+weapons.size() + " " + weaponEffects.size() + " " + items.size() + " " + puffs.size());
+                Log.d("SIZES","pe: " + physicalEffects.size() + " w: "+weapons.size() + " we: " + weaponEffects.size() + " i: " + items.size() + " puf: " + puffs.size());
                 items.add(new Item(world,0,0,150));
             }
 
@@ -362,6 +373,19 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     weapons.remove(i);
                 }
             }
+
+            for (Entity ent: players) {
+                if (ent.isDead() ) {
+
+                   // Log.d("ent is ", "dead pe size: " + physicalEffects.size());
+
+                    ent.deathAnimation(physicalEffects);
+                    ent.setHealth(100);
+                    ent.setX(1200);
+                    ent.setY(100);
+                }
+            }
+
             if (weapons.size() > 15) {
                 Log.d("WEAPONS", "SIZE: " + weapons.size());
             }
@@ -397,6 +421,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             }
             for (Item item: items) {
                 item.draw(canvas);
+            }
+
+            for (PhysicalEffect pe: physicalEffects) {
+                pe.draw(canvas);
             }
 
             canvas.restoreToCount(savedState);

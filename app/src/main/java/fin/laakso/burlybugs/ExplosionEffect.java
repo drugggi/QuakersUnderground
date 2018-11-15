@@ -105,12 +105,16 @@ public class ExplosionEffect extends WeaponEffect {
             ent.setKnockback(x, y, dx, dy);
             ent.increaseHealth(decreaseAmount);
 
-            // Entity dead, respawns 1200,100
-            if (ent.getHealth() <= 0) {
-                ent.setX(1200);
-                ent.setY(100);
-                ent.setHealth(300);
+            if (ent.isDead() ) {
+                for (int i = 0; i < 5 ; i ++) {
+                    BloodEffect newBlood = new BloodEffect(camera, ent.getX() + GamePanel.rng.nextInt(32)+12,
+                            ent.getY() + GamePanel.rng.nextInt(64), GamePanel.rng.nextInt(7) + 1);
+                    newBlood.setDX( GamePanel.rng.nextInt(10) - 5);
+                    newBlood.setDY( GamePanel.rng.nextInt(10) - 5);
+                    effects.add(newBlood );
+                }
             }
+
 
         }
     }
