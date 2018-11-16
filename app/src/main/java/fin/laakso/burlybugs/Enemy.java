@@ -145,36 +145,48 @@ public class Enemy extends Entity {
     public void update() {
         animation.update();
         updateAmount++;
-         //makeIntelligentDecision();
+        makeIntelligentDecision();
 
         if (dx > 10) {
-
             dx = dx * 11 / 12;
         }
-        x += dx ;
-        if (jumping) {
-            if (parachute) {
-                dy = 1;
-            }
-            else {
 
+        // Update the x and y position and then adjust it depending if collision is happening
+        x += dx ;
+        if (dx > 0) {
+            checkRightTileCollision();
+        }
+        else if (dx < 0) {
+            checkLeftTileCollision();
+        }
+
+
+        if (jumping) {
                 if (dy > 15) {
                     dy = 15;
                 }
                 else {
                     dy = dy - GamePanel.GRAVITY;
                 }
-            }
+
         }
         else {
             dy = 0;
             jumping = false;
-            parachute = false;
         }
 
         if (y > 0 && y <= gameWorld.getWorldHeight() - super.height && x > 0 && x < gameWorld.getWorldWidth() ) {
             y += dy;
         }
+
+        if (dy >= 0) {
+            checkLegTileCollision();
+        }
+        else {
+            checkHeadTileCollision();
+        }
+
+
 
         // player cant be left of the screen
         if (x < 0) {
@@ -199,28 +211,7 @@ public class Enemy extends Entity {
         }
 
 
-        if (dy >= 0) {
-            checkLegTileCollision();
 
-        }
-
-//            checkHeadTileCollision();
-        else {
-            Tile headTile = gameWorld.getTile((x) / Tile.TILE_WIDTH, (y) / Tile.TILE_HEIGHT);
-            // Log.d("Tile", "solid: " + headTile.isSolid() + "  " + headTile.toString());
-            if ( headTile.isSolid() ) {
-                dy = 0;
-                // jumping = false;
-                // y =
-            }
-        }
-
-        if (dx > 0) {
-            // checkRightTileCollision();
-        }
-        else if (dx < 0) {
-            // checkLeftTileCollision
-        }
 
     }
 

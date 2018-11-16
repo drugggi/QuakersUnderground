@@ -191,7 +191,16 @@ public class Player extends Entity {
         int differenceX = - (x - directionX);
         int differenceY = - (y - directionY)*2;
 
-        if (!moving && !jumping) {
+
+        Log.d("DIfrrerenceX","" + differenceX);
+
+        if ( (differenceX > -200) && (differenceX < 200) ) {
+            moving = true;
+            dx = dx/2;
+        }
+
+
+        if (!moving && !jumping )  {
             dx = differenceX / 20;
             moving = true;
         }
@@ -235,12 +244,10 @@ public class Player extends Entity {
                 else {
                     dy = dy - GamePanel.GRAVITY;
                 }
-
         }
         else {
             dy = 0;
             jumping = false;
-            parachute = false;
         }
 
 
@@ -301,7 +308,6 @@ public class Player extends Entity {
             animation.startAnimation(true);
         }
 
-        //Collision detection
         if (updateAmount % 150 == 0) {
             Log.d("updateAmount",""+updateAmount);
             Log.d("player POSITION","x/y: " + x +"/"+y + "   dx/dy: " + dx + "/" + dy);

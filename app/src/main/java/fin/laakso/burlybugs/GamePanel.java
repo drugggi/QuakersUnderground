@@ -117,7 +117,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        /*
+/*
+
         int index = event.getActionIndex();
         int pointerId = event.getPointerId(index);
         int action = event.getActionMasked();
@@ -136,33 +137,64 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         Log.d("pointerID",""+pointerId);
         Log.d("action",""+action);
         Log.d("Event","onTouchEvent Method");
-
 */
+
+
         // MOTIONEVENT IS TACKING FINGERMOTION EVENTWHOU ACTION DOWN OR UP IS NOT CALLED
         // CONSIDER UPDATING FINGER POSITION TO PLAYER SET DIRECTION
         int rawIndex = event.getActionIndex();
+        int actionMasked = event.getActionMasked();
+        int pointerId = event.getPointerId(rawIndex);
         float rawX = event.getRawX() *  WIDTH / getWidth();
         float rawY = event.getRawY() * HEIGHT / getHeight();
-       //  Log.d("is shooting",": " +player.isShooting() );
-        if (player.isShooting() ) {
-            rawX = event.getX(rawIndex);
-            rawY = event.getY(rawIndex);
-           // Log.d("is shooting","yes");
-            player.shoot(weapons,(int)rawX,(int)rawY);
+        float actionRawX = event.getX(rawIndex);
+        float actionRawY = event.getY(rawIndex);
+
+
+
+        //Log.d("RAW INDEX","" + rawIndex+" actMask: " + actionMasked + "   poinerID: " +pointerId);
+       // Log.d("RAWX/Y",event.getRawX() + "/" + event.getRawY());
+        //Log.d("ACTIONRAWX/Y",event.getX(rawIndex) + "/" + event.getY(rawIndex));
+
+        int count = event.getPointerCount();
+        float[] x = new float[count];
+        float[] y = new float[count];
+
+        for (int i = 0; i < count; i++) {
+            x[i] = event.getX(i);
+            y[i] = event.getY(i);
+           // Log.d("count X/y",": " + i + "   X/Y:" + x[i] +"/"+ y[i]);
         }
 
-        else if (player.isJumping() && !player.isParachute()) {
-            player.keepDirection(rawX,rawY);
+        if (player.isShooting() && count == 2) {
+
+            player.shoot(weapons,(int)x[1],(int)y[1]);
+        }
+
+        if ( count > 0) {
+            player.keepDirection(x[0],y[0]);
         }
 
         switch (event.getActionMasked() ) {
 
+  /*          case MotionEvent.ACTION_MOVE:
+                int count = event.getPointerCount();
+                float[] x = new float[count];
+                float[] y = new float[count];
+
+                for (int i = 0; i < count; i++) {
+                    x[i] = event.getX(i);
+                    y[i] = event.getY(i);
+                    Log.d("count X/y",": " + i + "   X/Y:" + x[i] +"/"+ y[i]);
+                }
+                return true;
+*/
             // If second finger touches the screen, its always for shooting purposes
             case MotionEvent.ACTION_POINTER_DOWN:
 
-                rawX = event.getX(rawIndex);
-                rawY = event.getY(rawIndex);
-                player.shoot(weapons,(int)rawX,(int)rawY);
+                //rawX = event.getX(rawIndex);
+                //rawY = event.getY(rawIndex);
+                player.shoot(weapons,(int)actionRawX,(int)actionRawY);
                 player.setShooting(true);
                 return true;
 
@@ -182,21 +214,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 }
                 else {
 
-                    // If player is jumping or anchored to ground finger touching the screen means shooting
+                    // If player is jumping it is shooting time
                     if (player.isJumping() ) {
-                        player.shoot(weapons,(int)rawX,(int)rawY);
-                        player.setShooting(true);
-                    }
-                    else if (player.isAnchor() ) {
                         player.shoot(weapons,(int)rawX,(int)rawY);
                         player.setShooting(true);
 
                     }
+
 
                     // Otherwise set player to move to direction where touch happened
                     else {
                         player.setDirection(rawX,rawY);
-                        // player.setShooting(false);
+                        player.setShooting(false);
                     }
 
                 }
@@ -207,15 +236,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
             case MotionEvent.ACTION_UP:
 
-                if (player.isPlaying() ) {
+                player.setMoving(false);
+
+        /*        if (player.isPlaying() ) {
                     player.setMoving(false);
-                    player.setShooting(false);
+                    // player.setShooting(false);
                 }
                 else {
                     player.setPlaying(true);
-                }
+                }*/
 
                 return true;
+
 
             default:
 

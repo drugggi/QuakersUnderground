@@ -21,7 +21,7 @@ public class GameCamera {
     }
 
     public void centerOnGameObject() {
-
+/*
         int DX = objectToFollow.getDX()*10;
         int DY = objectToFollow.getDY()*10;
 
@@ -45,10 +45,10 @@ public class GameCamera {
         else {
             directionBonusY += 2;
         }
+*/
 
-
-        xOffset = objectToFollow.getX() - GamePanel.WIDTH / 2 + directionBonusX;
-        yOffset = objectToFollow.getY() - GamePanel.HEIGHT / 2 + directionBonusY;
+        xOffset = objectToFollow.getX() - GamePanel.WIDTH / 2 ;//+ directionBonusX;
+        yOffset = objectToFollow.getY() - GamePanel.HEIGHT / 2;// + directionBonusY;
        // Log.d("offsets","x/y: " + xOffset + "/"+yOffset);
 
         if (yOffset + GamePanel.HEIGHT > 2400 ) {
