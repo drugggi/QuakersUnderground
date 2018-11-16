@@ -142,13 +142,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         // MOTIONEVENT IS TACKING FINGERMOTION EVENTWHOU ACTION DOWN OR UP IS NOT CALLED
         // CONSIDER UPDATING FINGER POSITION TO PLAYER SET DIRECTION
+
         int rawIndex = event.getActionIndex();
-        int actionMasked = event.getActionMasked();
-        int pointerId = event.getPointerId(rawIndex);
+       // int actionMasked = event.getActionMasked();
+       // int pointerId = event.getPointerId(rawIndex);
         float rawX = event.getRawX() *  WIDTH / getWidth();
         float rawY = event.getRawY() * HEIGHT / getHeight();
         float actionRawX = event.getX(rawIndex);
         float actionRawY = event.getY(rawIndex);
+
 
 
 
@@ -167,11 +169,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         if (player.isShooting() && count == 2) {
-
             player.shoot(weapons,(int)x[1],(int)y[1]);
         }
+/*
 
-        if ( count > 0) {
+        if (player.isJumping() && player.isShooting() && count == 1) {
+            player.shoot(weapons,(int)x[0],(int)y[0]);
+        }
+*/
+
+        if ( count > 0 ) {
             player.keepDirection(x[0],y[0]);
         }
 
@@ -225,6 +232,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     // Otherwise set player to move to direction where touch happened
                     else {
                         player.setDirection(rawX,rawY);
+                        player.setMoving(true);
                         player.setShooting(false);
                     }
 

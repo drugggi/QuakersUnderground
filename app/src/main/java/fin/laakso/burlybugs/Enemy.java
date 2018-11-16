@@ -108,7 +108,7 @@ public class Enemy extends Entity {
 
     @Override
     public void shoot(ArrayList<Weapon> shootingWeapons, int towardsX, int towradsY) {
-   /*     long missileElapsed2 = (System.nanoTime() - backpack.getShotStartTime() )/1000000;
+        long missileElapsed2 = (System.nanoTime() - backpack.getShotStartTime() )/1000000;
         if (missileElapsed2 < 1000) {return; }
 
         float differenceX = (x - towardsX);
@@ -139,7 +139,7 @@ public class Enemy extends Entity {
         newMissile.setVelocity(-velX/4,-velY/4);
         newMissile.setEntity(this);
 
-        shootingWeapons.add(newMissile);*/
+        shootingWeapons.add(newMissile);
     }
 
     public void update() {

@@ -163,14 +163,22 @@ public class Player extends Entity {
     public void keepDirection(float rawX,float rawY) {
         int directionX = (int ) rawX +camera.getxOffset() ;
         int directionY = (int) rawY + camera.getyOffset() ;
-        // Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
+         Log.d("values","x/y: "+ x + "/" + y + "   Dir: " +directionX + "/" + directionY);
         int differenceX = - (x - directionX);
         int differenceY = - (y - directionY);
 
-        if (differenceX < 0) {
+        Log.d("DifferenceX","" + differenceX);
+
+        moving = true;
+        if (differenceX < -100) {
                 dx--;
-            } else {
+            }
+            else if ( differenceX > 100){
                 dx++;
+        }
+        else {
+            dx = dx*11/12;
+            moving = false;
         }
 
         if ( dx > 15) {
