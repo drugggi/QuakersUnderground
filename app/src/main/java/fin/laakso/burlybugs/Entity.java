@@ -172,6 +172,25 @@ public class Entity extends GameObject {
         jumping = j;
     }
 
+    protected void checkHeadTileCollision() {
+        int tileY = (y) / Tile.TILE_HEIGHT;
+
+        Tile leftHeadTile = gameWorld.getTile((x) / Tile.TILE_WIDTH, (y) / Tile.TILE_HEIGHT);
+        Tile rightHeadTile = gameWorld.getTile((x+width)/Tile.TILE_WIDTH, (y) / Tile.TILE_HEIGHT);
+
+        if (!leftHeadTile.isDestructible() || !rightHeadTile.isDestructible() ) {
+            dy = 0;
+            //Log.d("tile","x/y: " + (x+width)+ "/" + (y+height) );
+            y = tileY * Tile.TILE_HEIGHT+Tile.TILE_HEIGHT+1;
+            // jumping = false;
+        }
+        else if ( leftHeadTile.isSolid() || rightHeadTile.isSolid()) {
+            dy = 0;
+            //jumping = false;
+            // y =
+        }
+    }
+
     protected void checkLegTileCollision() {
         int tileY = (y+height) / Tile.TILE_HEIGHT;
 
@@ -192,5 +211,55 @@ public class Entity extends GameObject {
         } else {
             jumping = true;
         }
+    }
+
+    protected void checkRightTileCollision() {
+        int tileX = (x+width) /Tile.TILE_WIDTH;
+
+        Tile rightHeadTile = gameWorld.getTile((x+width)/Tile.TILE_WIDTH,y/Tile.TILE_HEIGHT);
+        Tile rightMiddleTile = gameWorld.getTile((x+width)/Tile.TILE_WIDTH,(y+height/2)/Tile.TILE_HEIGHT);
+        Tile rightLegTile = gameWorld.getTile((x+width)/Tile.TILE_WIDTH,(y+height-1)/Tile.TILE_HEIGHT);
+
+        if (!rightHeadTile.isDestructible() || !rightLegTile.isDestructible() || !rightMiddleTile.isDestructible() ) {
+           // dx =0;
+            //Log.d("tile","x/y: " + (x+width)+ "/" + (y+height) );
+            x = tileX * Tile.TILE_WIDTH - height-1;
+
+            // Checking leg tile, if there is nothing continue jumping = true
+            checkLegTileCollision();
+            //jumping = false;
+        }
+/*        else if ( !rightHeadTile.isSolid() || !rightLegTile.isSolid() || !rightMiddleTile.isSolid() ) {
+            dx = 0;
+            jumping = false;
+            // y =
+        } else {
+            jumping = true;
+        }*/
+    }
+
+    protected void checkLeftTileCollision() {
+        int tileX = (x) /Tile.TILE_WIDTH;
+
+        Tile rightHeadTile = gameWorld.getTile((x)/Tile.TILE_WIDTH,y/Tile.TILE_HEIGHT);
+        Tile rightMiddleTile = gameWorld.getTile((x)/Tile.TILE_WIDTH,(y+height/2)/Tile.TILE_HEIGHT);
+        Tile rightLegTile = gameWorld.getTile((x)/Tile.TILE_WIDTH,(y+height-1)/Tile.TILE_HEIGHT);
+
+        if (!rightHeadTile.isDestructible() || !rightLegTile.isDestructible() || !rightMiddleTile.isDestructible() ) {
+           // dx = 0;
+            //Log.d("tile","x/y: " + (x+width)+ "/" + (y+height) );
+            x = tileX * Tile.TILE_WIDTH +1+Tile.TILE_WIDTH;
+
+            // Checking leg tile, if there is nothing continue jumping = true
+            checkLegTileCollision();
+            //jumping = false;
+        }
+/*        else if ( !rightHeadTile.isSolid() || !rightLegTile.isSolid() || !rightMiddleTile.isSolid() ) {
+            dx = 0;
+            jumping = false;
+            // y =
+        } else {
+            jumping = true;
+        }*/
     }
 }

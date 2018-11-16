@@ -108,7 +108,7 @@ public class Enemy extends Entity {
 
     @Override
     public void shoot(ArrayList<Weapon> shootingWeapons, int towardsX, int towradsY) {
-        long missileElapsed2 = (System.nanoTime() - backpack.getShotStartTime() )/1000000;
+   /*     long missileElapsed2 = (System.nanoTime() - backpack.getShotStartTime() )/1000000;
         if (missileElapsed2 < 1000) {return; }
 
         float differenceX = (x - towardsX);
@@ -139,15 +139,18 @@ public class Enemy extends Entity {
         newMissile.setVelocity(-velX/4,-velY/4);
         newMissile.setEntity(this);
 
-        shootingWeapons.add(newMissile);
+        shootingWeapons.add(newMissile);*/
     }
 
     public void update() {
         animation.update();
         updateAmount++;
-         makeIntelligentDecision();
+         //makeIntelligentDecision();
 
-        //dx = dx *  11 / 12;
+        if (dx > 10) {
+
+            dx = dx * 11 / 12;
+        }
         x += dx ;
         if (jumping) {
             if (parachute) {
@@ -197,25 +200,11 @@ public class Enemy extends Entity {
 
 
         if (dy >= 0) {
-
             checkLegTileCollision();
-            /*
-
-            Tile legTile = gameWorld.getTile((x) / Tile.TILE_WIDTH, (y+height) / Tile.TILE_HEIGHT);
-            // Log.d("Tile", "solid: " + legTile.isSolid() + "  " + legTile.toString());
-
-            if ( legTile.isSolid() ) {
-
-                dy = 0;
-                jumping = false;
-                // y =
-            } else {
-                jumping = true;
-            }
-*/
 
         }
 
+//            checkHeadTileCollision();
         else {
             Tile headTile = gameWorld.getTile((x) / Tile.TILE_WIDTH, (y) / Tile.TILE_HEIGHT);
             // Log.d("Tile", "solid: " + headTile.isSolid() + "  " + headTile.toString());
@@ -224,6 +213,13 @@ public class Enemy extends Entity {
                 // jumping = false;
                 // y =
             }
+        }
+
+        if (dx > 0) {
+            // checkRightTileCollision();
+        }
+        else if (dx < 0) {
+            // checkLeftTileCollision
         }
 
     }

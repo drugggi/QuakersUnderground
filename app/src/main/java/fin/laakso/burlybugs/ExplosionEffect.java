@@ -63,6 +63,7 @@ public class ExplosionEffect extends WeaponEffect {
 
         if (Rect.intersects(ent.getRectangle(), this.getRectangle())) {
 
+            ent.setJumping(true);
             int differenceX = ent.getCenterX() - this.getCenterX();
             int differenceY = ent.getCenterY() - this.getCenterY();
 

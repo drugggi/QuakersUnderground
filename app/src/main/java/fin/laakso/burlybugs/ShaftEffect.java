@@ -135,6 +135,9 @@ public class ShaftEffect extends WeaponEffect {
 
             }
 
+            if (ent.getDY() > 0) {
+                ent.setDY(0);
+            }
 
             entY = -10;
             entDY = -5;
@@ -150,6 +153,21 @@ public class ShaftEffect extends WeaponEffect {
 
             ent.setKnockback(0, entY, 0, entDY);
             ent.increaseHealth(decreaseAmount);
+
+            if (ent.isDead() ) {
+                bloodDX = GamePanel.rng.nextInt(10);
+                bloodDY = -GamePanel.rng.nextInt(10);
+                for (int i = 0 ; i < 9 ; i++) {
+                    bloodDX -= 2;
+                    bloodDY += 2;
+
+                    newBlood = new BloodEffect(camera, ent.getX() + 32, ent.getY() + 16, GamePanel.rng.nextInt(7) + 1);
+                    newBlood.setDX( 2* bloodDX );
+                    newBlood.setDY(2*  bloodDY );
+                    effects.add(newBlood );
+
+                }
+            }
 
 
         }
